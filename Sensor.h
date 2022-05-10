@@ -8,6 +8,8 @@
 #include<string>
 #include<iostream>
 #include<vector>
+#include "Mesure.h"
+
 using namespace std;
 
 //---------- Interface de la classe <Sensor> (fichier Sensor.h) ----------------
