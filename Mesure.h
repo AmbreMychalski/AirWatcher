@@ -6,20 +6,11 @@
     e-mail               : $EMAIL$
 *************************************************************************/
 
-
-struct Date {
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int second;
-};
-
 //---------- Interface de la classe <Mesure> (fichier Mesure.h) ----------------
 #if ! defined ( Mesure_H )
 #define Mesure_H
 #include "Attribute.h"
+#include "Date.h"
 //
 //
 //------------------------------------------------------------------------
