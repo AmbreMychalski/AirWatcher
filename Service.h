@@ -92,6 +92,20 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
+    std::vector<Sensor> filterNeighbours(std::pair<double, double> coords);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Retourne la liste des capteurs les plus proches
+
+    std::vector<Sensor> filterByPeriod(Date date, Date endDate);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Retourne la liste des capteurs ayant des mesures dans la même période de temps
+
     //------------------------------------------------- Surcharge d'opérateurs
     Service &operator=(const Service &unService);
     // Mode d'emploi :

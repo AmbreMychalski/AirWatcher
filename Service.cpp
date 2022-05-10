@@ -50,6 +50,14 @@ void Service::computeMean(std::vector<Measure> measures, double (&returnArray)[N
 {
 }
 
+std::vector<Sensor> filterNeighbours(std::pair<double, double> coords)
+{
+}
+
+std::vector<Sensor> filterByPeriod(Date date, Date endDate)
+{
+}
+
 //----- Fin de Méthode
 
 //------------------------------------------------- Surcharge d'opérateurs
