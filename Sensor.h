@@ -46,7 +46,7 @@ public:
         this->coords = make_pair(x, y);
     }
 
-    void addMeasureList(Measure measure){
+    void addMeasure(Measure measure){
         this->measureList.push_back(measure);
     }
 
@@ -62,7 +62,7 @@ public:
         return this->coords;
     }
 
-    vector <Measure>* getMeasureList( ) const {
+    const vector <Measure>* getMeasureList( ) const {
         return &(this->measureList);
     }
 
