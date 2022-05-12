@@ -1,21 +1,21 @@
 /*************************************************************************
-                           Mesure  -  description
+                           Measure  -  description
                              -------------------
     début                : $DATE$
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
 
-//---------- Interface de la classe <Mesure> (fichier Mesure.h) ----------------
-#if ! defined ( Mesure_H )
-#define Mesure_H
+//---------- Interface de la classe <Measure> (fichier Measure.h) ----------------
+#if ! defined ( Measure_H )
+#define Measure_H
 #include "Attribute.h"
 #include "Date.h"
 //
 //
 //------------------------------------------------------------------------
 
-class Mesure 
+class Measure 
 {
 //----------------------------------------------------------------- PUBLIC
 
@@ -74,19 +74,19 @@ public:
     //
 
 //-------------------------------------------- Constructeurs - destructeur
-    Mesure ( ){}
+    Measure ( ){}
 
-    Mesure ( const Mesure & aMesure ){
-        this->value = aMesure.getValue();
-        this->date = aMesure.getDate();
-        this->attribute = aMesure.getAttribute();
+    Measure ( const Measure & aMeasure ){
+        this->value = aMeasure.getValue();
+        this->date = aMeasure.getDate();
+        this->attribute = aMeasure.getAttribute();
     }
     // Mode d'emploi (constructeur de copie) :
     //
     // Contrat :
     //
 
-    Mesure ( double value, Date &date, Attribute &attribute, string sensorId){
+    Measure ( double value, Date &date, Attribute &attribute, string sensorId){
         this->value=value;
         this->date=date;
         this->attribute = attribute;
@@ -97,7 +97,7 @@ public:
     // Contrat :
     //
 
-    virtual ~Mesure ( ){}
+    virtual ~Measure ( ){}
     // Mode d'emploi :
     //
     // Contrat :
@@ -117,5 +117,5 @@ protected:
 
 //-------------------------------- Autres définitions dépendantes de <Xxx>
 
-#endif // Mesure_H
+#endif // Measure_H
 
