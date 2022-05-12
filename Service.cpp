@@ -23,18 +23,18 @@ using namespace std;
 
 //----------------------------------------------------- Méthodes publiques
 
-std::map<Sensor, double> Service::computeSimilarity(string sensorId)
+map<Sensor, double> Service::computeSimilarity(string sensorId)
 {
 }
 
-double Service::computeMeanPointTimePeriod(Date date, Date endDate, std::pair<double, double> center, double radius)
+double Service::computeMeanPointTimePeriod(Date date, Date endDate, pair<double, double> center, double radius)
 {
 }
 int Service::getUserPoints(string userId)
 {
 }
 
-std::vector<Sensor> Service::getUserSensors(string idUser)
+vector<Sensor> Service::getUserSensors(string idUser)
 {
 }
 
@@ -46,15 +46,15 @@ int Service::computeATMOIndex(double o3, double so2, double no2, double pm10)
 {
 }
 
-void Service::computeMean(std::vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES])
+void Service::computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES])
 {
 }
 
-std::vector<Sensor> filterNeighbours(std::pair<double, double> coords)
+vector<Sensor> filterNeighbours(pair<double, double> coords)
 {
 }
 
-std::vector<Sensor> filterByPeriod(Date date, Date endDate)
+vector<Measure> filterByPeriod(String sensorId, Date startdate, Date endDate)
 {
 }
 

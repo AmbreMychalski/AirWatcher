@@ -86,28 +86,6 @@ public:
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
 
-    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    // Retourne dans le tableau passé en paramètre
-    // la moyenne des mesures des capteurs par attribut (type de mesure)
-
-    vector<Sensor> filterNeighbours(pair<double, double> coords);
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    // Retourne la liste des capteurs les plus proches
-
-    vector<Sensor> filterByPeriod(Date date, Date endDate);
-    // type Méthode ( liste des paramètres );
-    // Mode d'emploi :
-    //
-    // Contrat :
-    // Retourne la liste des capteurs ayant des mesures dans la même période de temps
-
     //------------------------------------------------- Surcharge d'opérateurs
     Service &operator=(const Service &unService);
     // Mode d'emploi :
@@ -144,6 +122,28 @@ private:
 protected:
     //----------------------------------------------------- Méthodes protégées
 
+    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Retourne dans le tableau passé en paramètre
+    // la moyenne des mesures des capteurs par attribut (type de mesure)
+
+    vector<Sensor> filterNeighbours(pair<double, double> coords);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Retourne la liste des capteurs les plus proches
+
+    vector<Measure> filterByPeriod(String sensorId, Date startdate, Date endDate);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Retourne la liste des mesures faites par le capteur pendant la période donnée
+    
     //----------------------------------------------------- Attributs protégés
 };
 
