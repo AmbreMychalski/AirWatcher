@@ -1,31 +1,41 @@
-# Flags utilisés dans chaque commande
-CPPFLAGS = -ansi -pedantic -Wall -std=c++11 -g
+TARGET_EXEC ?= a.out
 
-# Edition de liens de main
-airwatcher: %.o
-	@echo "Edition de liens du main"
-	g++ -o airwatcher %.o
+BUILD_DIR ?= ./build
+SRC_DIRS ?= ./src
 
-# Compilation de tous les fichiers cpp
-%.o : %.cpp %.h
-	@echo "Compilation de $<"
-	g++ -c $< $(CPPFLAGS)
+SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
 
-make clean:
-	@echo "Suppresion des fichiers compilés"
-	touch a.o
-	rm *.o
-	make
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-# Vérification au fur et à mesure de
-# la gestion de la mémoire avec valgrind
-checkMemory :
+CPPFLAGS ?= $(INC_FLAGS) -MMD -MP
 
-	@echo "Suppresion des fichiers compilés"
-	touch a.o
-	rm *.o
-	
-	make CPPFLAGS='$(CPPFLAGS) -DMAP'
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS)
 
-	valgrind ./sejours --track-origins=yes
+# assembly
+$(BUILD_DIR)/%.s.o: %.s
+	$(MKDIR_P) $(dir $@)
+	$(AS) $(ASFLAGS) -c $< -o $@
 
+# c source
+$(BUILD_DIR)/%.c.o: %.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# c++ source
+$(BUILD_DIR)/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+
+.PHONY: clean
+
+clean:
+	$(RM) -r $(BUILD_DIR)
+
+-include $(DEPS)
+
+MKDIR_P ?= mkdir -p

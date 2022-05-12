@@ -46,6 +46,7 @@
     "list": "cpp",
     "map": "cpp",
     "xtree": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "algorithm": "cpp"
   }
 }

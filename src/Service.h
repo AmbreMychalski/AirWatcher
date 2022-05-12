@@ -10,6 +10,7 @@
 #if !defined(SERVICE_H)
 #define SERVICE_H
 
+#include <string>
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -42,7 +43,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    map<Sensor, double> computeSimilarity(string sensorId) const;
+    std::map<Sensor, double> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -50,7 +51,7 @@ public:
     // Renvoie la liste des capteurs de sensorList associés à leur similarité
     // par rapport au capteur de référence, sur une période donnée
 
-    double computeMeanPointTimePeriod(Date date, Date endDate, pair<double, double> center, double radius) const;
+    double computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES]) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -65,14 +66,14 @@ public:
     // Contrat :
     // Renvoie le nombre de points gagnés par l'utilisateur
 
-    vector<Sensor> getUserSensors(string idUser) const;
+    const std::vector<Sensor *> *Service::getUserSensors(string userId) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Renvoie les capteurs associés à un utilisateur
 
-    vector<Cleaner> getProviderCleaners(string idProvider) const;
+    const std::vector<Cleaner *> *Service::getProviderCleaners(string providerId) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -86,32 +87,6 @@ public:
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
 
-    //------------------------------------------------- Surcharge d'opérateurs
-    Service &operator=(const Service &unService);
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    //-------------------------------------------- Constructeurs - destructeur
-    Service(const Service &unService);
-    // Mode d'emploi (constructeur de copie) :
-    //
-    // Contrat :
-    //
-
-    Service();
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
-    virtual ~Service();
-    // Mode d'emploi :
-    //
-    // Contrat :
-    //
-
     //------------------------------------------------------------------ PRIVE
 
 private:
@@ -122,7 +97,7 @@ private:
 protected:
     //----------------------------------------------------- Méthodes protégées
 
-    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
+    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -130,20 +105,20 @@ protected:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    vector<Sensor> filterNeighbours(pair<double, double> coords);
+    vector<Sensor> *filterNeighbours(pair<double, double> coords) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
 
-    vector<Measure> filterByPeriod(String sensorId, Date startdate, Date endDate);
+    vector<Measure> *filterByPeriod(std::string sensorId, Date startdate, Date endDate) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des mesures faites par le capteur pendant la période donnée
-    
+
     //----------------------------------------------------- Attributs protégés
 };
 

@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Provider> (fichier Provider.h) ----------------
-#if ! defined ( PROVIDER_H )
+#if !defined(PROVIDER_H)
 #define PROVIDER_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -27,77 +27,74 @@ using namespace std;
 
 class Provider
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    string getId () const
+    //----------------------------------------------------- Méthodes publiques
+    string getId() const
     {
         return id;
     }
 
-    string getEmail () const
+    string getEmail() const
     {
         return email;
     }
 
-    string getPassword () const
+    string getPassword() const
     {
         return password;
     }
 
-    int getNbCleaner () const
+    int getNbCleaner() const
     {
         return cleanerList.size();
     }
-    
-    const vector <Cleaner *>* getCleanerList () const
+
+    const vector<Cleaner *> *getCleanerList() const
     {
         return &(cleanerList);
     }
 
-    void addCleaner( Cleaner * cleaner )
+    void addCleaner(Cleaner *cleaner)
     {
         cleanerList.push_back(cleaner);
     }
 
-//-------------------------------------------- Constructeurs - destructeur
-    Provider (string id, string email, string password):
-    id( id ), email( email ), password( password )
+    //-------------------------------------------- Constructeurs - destructeur
+    Provider(string id, string email, string password) : id(id), email(email), password(password)
     {
 #ifdef MAP
-    cout << "Appel au constructeur de <Provider>" << endl;
-#endif
-    }
-    
-    Provider ()
-    {
-#ifdef MAP
-    cout << "Appel au constructeur de <Provider>" << endl;
+        cout << "Appel au constructeur de <Provider>" << endl;
 #endif
     }
 
-    virtual ~Provider ( )
+    Provider()
     {
 #ifdef MAP
-    cout << "Appel au destructeur de <Provider>" << endl;
+        cout << "Appel au constructeur de <Provider>" << endl;
 #endif
     }
 
-//------------------------------------------------------------------ PRIVE
+    virtual ~Provider()
+    {
+#ifdef MAP
+        cout << "Appel au destructeur de <Provider>" << endl;
+#endif
+    }
+
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     string id;
     string email;
     string password;
-    vector <Cleaner *> cleanerList;
-
+    vector<Cleaner *> cleanerList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Provider>
 
 #endif // PROVIDER_H
-
