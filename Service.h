@@ -21,6 +21,8 @@
 #include "Sensor.h"
 #include "Date.h"
 
+using namespace std;
+
 //--------------------------------------------------- Interfaces utilisées
 
 //------------------------------------------------------------- Constantes
@@ -40,7 +42,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    std::map<Sensor, double> computeSimilarity(string sensorId) const;
+    map<Sensor, double> computeSimilarity(string sensorId) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -48,7 +50,7 @@ public:
     // Renvoie la liste des capteurs de sensorList associés à leur similarité
     // par rapport au capteur de référence, sur une période donnée
 
-    double computeMeanPointTimePeriod(Date date, Date endDate, std::pair<double, double> center, double radius) const;
+    double computeMeanPointTimePeriod(Date date, Date endDate, pair<double, double> center, double radius) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -63,7 +65,7 @@ public:
     // Contrat :
     // Renvoie le nombre de points gagnés par l'utilisateur
 
-    std::vector<Sensor> getUserSensors(string idUser) const;
+    vector<Sensor> getUserSensors(string idUser) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -84,7 +86,7 @@ public:
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
 
-    void computeMean(std::vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
+    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -92,14 +94,14 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    std::vector<Sensor> filterNeighbours(std::pair<double, double> coords);
+    vector<Sensor> filterNeighbours(pair<double, double> coords);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
 
-    std::vector<Sensor> filterByPeriod(Date date, Date endDate);
+    vector<Sensor> filterByPeriod(Date date, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //

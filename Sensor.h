@@ -8,7 +8,7 @@
 #include<string>
 #include<iostream>
 #include<vector>
-#include "Mesure.h"
+#include "Measure.h"
 
 using namespace std;
 
@@ -46,24 +46,24 @@ public:
         this->coords = make_pair(x, y);
     }
 
-    void addListMesures(Mesure mes){
-        this->listMesures.push_back(mes);
+    void addMeasureList(Measure measure){
+        this->measureList.push_back(measure);
     }
 
-    string getId( ){
+    string getId( ) const {
         return this->id;
     }
 
-    bool getReliable( ){
+    bool getReliable( ) const {
         return this->reliable;
     }
 
-    pair<double,double> getCoords( ){
+    pair<double,double> getCoords( ) const {
         return this->coords;
     }
 
-    vector <Mesure>* getListMesures( ){
-        return &(this->listMesures);
+    vector <Measure>* getMeasureList( ) const {
+        return &(this->measureList);
     }
 
 //-------------------------------------------- Constructeurs - destructeur
@@ -95,7 +95,7 @@ protected:
     string id;
     bool reliable;
     std::pair<double,double> coords;
-    std::vector<Mesure> listMesures;
+    std::vector<Measure> measureList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>

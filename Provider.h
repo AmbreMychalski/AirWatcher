@@ -46,6 +46,11 @@ public:
         return password;
     }
 
+    int getNbCleaner () const
+    {
+        return cleanerList.size();
+    }
+    
     const vector <Cleaner *>* getCleanerList () const
     {
         return &(cleanerList);

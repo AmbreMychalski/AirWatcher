@@ -32,26 +32,28 @@ class User
 
 public:
 //----------------------------------------------------- Méthodes publiques
-    string getId(){
+    string getId() const {
         return id;
     }
 
-    string getEmail(){
+    string getEmail() const {
         return email;
     }
 
-    string getPassword(){
+    string getPassword() const {
         return password;
     }
 
-    
-
-    int getNbPoints(){
+    int getNbPoints() const {
         return nbPoints;
     }
 
-    vector<Sensor *>* getListSensor(){
-        return &(listSensors);
+    int getNbSensor() const {
+        return sensorList.size();
+    }
+
+    const vector<Sensor *>* getSensorList() const {
+        return &(sensorList);
     }
 
     void setId(string id_){
@@ -66,12 +68,12 @@ public:
         this->nbPoints = nbPoints_;
     }
 
-    void addSensors(Sensor *sensor){
-        this->listSensors.push_back(sensor);
+    void addSensor(Sensor *sensor){
+        this->sensorList.push_back(sensor);
     }
     
     bool isReliable(){
-       return (*listSensors.begin())->getReliable();
+       return (*sensorList.begin())->getReliable();
     }
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -103,7 +105,7 @@ protected:
     string email;
     string password;
     int nbPoints;
-    vector <Sensor *> listSensors;
+    vector <Sensor *> sensorList;
 
 
 };
