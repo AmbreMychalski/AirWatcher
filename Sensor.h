@@ -94,8 +94,8 @@ protected:
 //----------------------------------------------------- Attributs protégés
     string id;
     bool reliable;
-    std::pair<double,double> coords;
-    std::vector<Measure> measureList;
+    pair<double,double> coords;
+    vector<Measure> measureList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>

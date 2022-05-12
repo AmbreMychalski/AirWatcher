@@ -50,12 +50,23 @@ void Service::computeMean(vector<Measure> measures, double (&returnArray)[NB_ATT
 {
 }
 
-vector<Sensor> filterNeighbours(pair<double, double> coords)
+vector<Sensor> Service::filterNeighbours(pair<double, double> coords)
 {
 }
 
-vector<Measure> filterByPeriod(String sensorId, Date startdate, Date endDate)
+vector<Measure> Service::filterByPeriod(String sensorId, Date startdate, Date endDate)
 {
+    vector<Measure> allMeasures = database.getSensorById(sensorId).getMeasureList();
+    vector<Measure> targetMeasures;
+    for(int i=0; i < allMeasures.size(); ++i)
+    {
+        Date date = allMeasures[i].getDate();
+        if ( startDate <= date && date <= endDate )
+        {
+            targetMeasures.push_back(allMeasures[i]);
+        }
+    }
+    return targetMeasures;
 }
 
 //----- Fin de Méthode
