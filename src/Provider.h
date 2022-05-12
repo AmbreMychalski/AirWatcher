@@ -62,7 +62,7 @@ public:
     }
 
     //-------------------------------------------- Constructeurs - destructeur
-    Provider(string id, string email, string password) : id(id), email(email), password(password)
+    Provider(string id) : id(id)
     {
 #ifdef MAP
         cout << "Appel au constructeur de <Provider>" << endl;

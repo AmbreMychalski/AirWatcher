@@ -80,9 +80,9 @@ public:
   
 //-------------------------------------------- Constructeurs - destructeur
   
-    User(string id_, string email_, string password_, int nbPoints_):
-    id(id_),email(email_),password(password_),nbPoints(nbPoints_){
-
+    User(string id_):
+    id(id_){
+        nbPoints=0;
     }
     // Mode d'emploi :
     //
