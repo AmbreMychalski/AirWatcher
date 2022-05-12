@@ -53,6 +53,10 @@ public:
     // Contrat :
     //
 
+    string getSensorId ( )const {
+        return this->sensorId;
+    }
+
     Date getDate ( )const{
         return this->date;
     }
@@ -82,10 +86,11 @@ public:
     // Contrat :
     //
 
-    Mesure ( double value, Date &date, Attribute &attribute){
+    Mesure ( double value, Date &date, Attribute &attribute, string sensorId){
         this->value=value;
         this->date=date;
         this->attribute = attribute;
+        this->sensorId = sensorId;
     }
     // Mode d'emploi :
     //
@@ -107,6 +112,7 @@ protected:
     double value;
     Date date;
     Attribute attribute;
+    string sensorId;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Xxx>

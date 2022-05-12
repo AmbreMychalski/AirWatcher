@@ -71,7 +71,7 @@ public:
     }
     
     bool isReliable(){
-        (*listSensors.begin())->getReliable();
+       return (*listSensors.begin())->getReliable();
     }
 
 //------------------------------------------------- Surcharge d'opérateurs
@@ -110,5 +110,5 @@ protected:
 
 //-------------------------------- Autres définitions dépendantes de <Xxx>
 
-#endif // XXX_H
+#endif // USER_H
 
