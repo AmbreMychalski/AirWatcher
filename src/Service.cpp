@@ -16,6 +16,7 @@ using namespace std;
 #include <string>
 #include <cmath>
 #include <algorithm> // std::sort
+#include <tgmath.h>
 #include "Provider.h"
 //------------------------------------------------------ Include personnel
 #include "Service.h"
@@ -27,7 +28,7 @@ const double MIN_LATITUDE = 43.5;
 const double MAX_LATITUDE = 48;
 const int MAX_NEAREST_SENSORS_NUMBER = 4;
 const int MIN_NEAREST_SENSORS_NUMBER = 1;
-const int MAX_NEAREST_SENSORS_RADIUS = 2;
+const int MAX_NEAREST_SENSORS_RADIUS = 100;
 
 const int THRESHOLD_STEP = 10;
 const double PM_10[] = {80, 65, 50, 42, 35, 28, 21, 14, 7, 0};
@@ -43,6 +44,48 @@ bool sortBySec(const pair<int, int> &a,
                const pair<int, int> &b)
 {
     return (a.second > b.second);
+}
+
+long double toRadians(const long double degree)
+{
+    // cmath library in C++
+    // defines the constant
+    // M_PI as the value of
+    // pi accurate to 1e-30
+    long double one_deg = (M_PI) / 180;
+    return (one_deg * degree);
+}
+
+long double distance(long double lat1, long double long1,
+                     long double lat2, long double long2)
+{
+    // Convert the latitudes
+    // and longitudes
+    // from degree to radians.
+    lat1 = toRadians(lat1);
+    long1 = toRadians(long1);
+    lat2 = toRadians(lat2);
+    long2 = toRadians(long2);
+     
+    // Haversine Formula
+    long double dlong = long2 - long1;
+    long double dlat = lat2 - lat1;
+ 
+    long double ans = pow(sin(dlat / 2), 2) +
+                          cos(lat1) * cos(lat2) *
+                          pow(sin(dlong / 2), 2);
+ 
+    ans = 2 * asin(sqrt(ans));
+ 
+    // Radius of Earth in
+    // Kilometers, R = 6371
+    // Use R = 3956 for miles
+    long double R = 6371;
+     
+    // Calculate the result
+    ans = ans * R;
+ 
+    return ans;
 }
 
 //----------------------------------------------------- Méthodes publiques
@@ -107,12 +150,12 @@ std::map<Sensor, double> *Service::computeSimilarity(string sensorId, std::vecto
     for (pair<Sensor, double> elemNormalizedDistance : distanceList)
     {
         double similarity = 1 - elemNormalizedDistance.second;
-        similarityList->insert(std::pair<Sensor, double>(elemNormalizedDistance.first, similarity));
+        similarityList->insert(make_pair(elemNormalizedDistance.first, similarity));
     }
 
     // Using sort() function to sort by 2nd element
     // of pair
-    sort(similarityList->begin(), similarityList->end(), sortBySec);
+    //sort(similarityList->begin(), similarityList->end(), sortBySec);
     return similarityList;
 }
 
@@ -125,7 +168,11 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
     // passé en paramètre
     for (Sensor sensor : *listSensorNeighbours)
     {
-        double distance = sqrt(pow(center.first - sensor.getCoords().first, 2) + pow(center.second - sensor.getCoords().second, 2));
+        double lat1 = center.first;
+        double long1 = center.second;
+        double lat2 = sensor.getCoords().first;
+        double long2 = sensor.getCoords().second;
+        double distance = 1.609344*3963.0 * acos((sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 - long1));
         distanceSum += distance;
     }
 
@@ -138,7 +185,11 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
         std::vector<Measure> *measuresList = filterByPeriod(sensor.getId(), startDate, endDate);
         double measuresMean[NB_ATTRIBUTES];
         computeMean(*measuresList, measuresMean);
-        double distance = sqrt(pow(center.first - sensor.getCoords().first, 2) + pow(center.second - sensor.getCoords().second, 2));
+        double lat1 = center.first;
+        double long1 = center.second;
+        double lat2 = sensor.getCoords().first;
+        double long2 = sensor.getCoords().second;
+        double distance = 1.609344*3963.0 * acos((sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 - long1));
         double ponderation = (1 - distance / distanceSum) / (LENGTH - 1);
 
         for (int i = 0; i < NB_ATTRIBUTES; ++i)
@@ -148,19 +199,22 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
     }
     return computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
 }
+
 int Service::getUserPoints(string userId) const
 {
+    int nbPoints =0;
     for (User user : database->getUserList())
     {
         if (user.getId().compare(userId))
         {
-            return user.getNbPoints();
+            nbPoints = user.getNbPoints();
         }
     }
+    return nbPoints;
 }
 
 const std::vector<Sensor *> *Service::getUserSensors(string userId) const
-{
+{   
     for (User user : database->getUserList())
     {
         if (user.getId().compare(userId))
@@ -168,6 +222,7 @@ const std::vector<Sensor *> *Service::getUserSensors(string userId) const
             return user.getSensorList();
         }
     }
+    return NULL;
 }
 
 const std::vector<Cleaner *> *Service::getProviderCleaners(string providerId) const
@@ -179,18 +234,21 @@ const std::vector<Cleaner *> *Service::getProviderCleaners(string providerId) co
             return provider.getCleanerList();
         }
     }
+    return NULL;
 }
 
 // https://fr.wikipedia.org/wiki/Indice_de_qualit%C3%A9_de_l%27air
 int Service::computeATMOIndex(double o3, double so2, double no2, double pm10) const
 {
+    int index = -1;
     for (int i = 0; i < THRESHOLD_STEP; ++i)
     {
         if (pm10 >= PM_10[i] || no2 >= NO_2[i] || so2 >= SO_2[i] || o3 >= O_3[i])
         {
-            return THRESHOLD_STEP - i;
+            index = THRESHOLD_STEP - i;
         }
     }
+    return index;    
 }
 
 void Service::computeMean(const vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]) const
@@ -199,48 +257,60 @@ void Service::computeMean(const vector<Measure> measures, double (&returnArray)[
     double so2 = 0;
     double no2 = 0;
     double pm10 = 0;
+    double nbO3, nbSo2, nbNo2, nbPm10 =0;
     const int LENGTH = measures.size();
     for (Measure measure : measures)
     {
-        if (measure.getAttribute().getUnit() == "O3")
+        if (measure.getAttribute().getId() == "O3")
         {
-            ++o3;
+            o3+=measure.getValue();
+            nbO3++;
         }
-        else if (measure.getAttribute().getUnit() == "SO2")
+        else if (measure.getAttribute().getId() == "SO2")
         {
-            ++so2;
+            so2+=measure.getValue();
+            nbSo2++;
         }
-        else if (measure.getAttribute().getUnit() == "NO2")
+        else if (measure.getAttribute().getId() == "NO2")
         {
-            ++no2;
+            no2+=measure.getValue();
+            nbNo2++;
         }
-        else if (measure.getAttribute().getUnit() == "PM10")
+        else if (measure.getAttribute().getId() == "PM10")
         {
-            ++pm10;
+            pm10+=measure.getValue();
+            nbPm10++;
         }
     }
-    returnArray[0] = o3 / LENGTH;
-    returnArray[1] = so2 / LENGTH;
-    returnArray[2] = no2 / LENGTH;
-    returnArray[3] = pm10 / LENGTH;
+    returnArray[0] = o3 / nbO3;
+    returnArray[1] = so2 / nbSo2;
+    returnArray[2] = no2 / nbNo2;
+    returnArray[3] = pm10 / nbPm10;
 }
 
-vector<Sensor> *Service::filterNeighbours(pair<double, double> coords) const
+vector<Sensor> *Service::filterNeighbours(pair<double, double> coords) const 
 {
+    
     if (coords.first < MIN_LATITUDE || coords.first > MAX_LATITUDE || coords.second < MIN_LONGITUDE || coords.second > MAX_LONGITUDE)
     {
         return NULL;
     }
     std::vector<Sensor> *sensors = new std::vector<Sensor>;
     int i = 0;
-    const int LENGTH = database->getSensorList().size();
+    vector<Sensor> sensorList = database->getSensorList();
+    const int LENGTH = sensorList.size();
     Sensor *sensorAtMinDistance = nullptr;
     double minDistance = 0;
 
     while (i < LENGTH && sensors->size() < MAX_NEAREST_SENSORS_NUMBER)
-    {
-        Sensor sensor = (*sensors)[i];
-        double dist = sqrt(pow(coords.first - sensor.getCoords().first, 2) + pow(coords.second - sensor.getCoords().second, 2));
+    {   
+        
+        Sensor sensor = sensorList[i];
+        double lat1 = coords.first;
+        double long1 = coords.second;
+        double lat2 = sensor.getCoords().first;
+        double long2 = sensor.getCoords().second;
+        long double dist = distance(lat1,long1,lat2,long2);
         if (dist < MAX_NEAREST_SENSORS_RADIUS)
         {
             sensors->push_back(sensor);
@@ -250,16 +320,17 @@ vector<Sensor> *Service::filterNeighbours(pair<double, double> coords) const
             minDistance = dist;
             sensorAtMinDistance = &sensor;
         }
+        ++i;
     }
-
     return sensors;
 }
 
 vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate) const
 {
     int i = 0;
-    const int LENGTH = database->getSensorList().size();
-    while (i < LENGTH && database->getSensorList()[i].getId() != sensorId)
+    vector<Sensor> sensorList =  database->getSensorList();
+    const int LENGTH = sensorList.size();
+    while (i < LENGTH && sensorList[i].getId() != sensorId)
     {
         ++i;
     }
@@ -267,7 +338,7 @@ vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date e
     {
         return NULL;
     }
-    Sensor sensor = database->getSensorList()[i];
+    Sensor sensor = sensorList[i];
     const vector<Measure> *allMeasures = sensor.getMeasureList();
     std::vector<Measure> *targetMeasures = new std::vector<Measure>;
     for (int i = 0; i < allMeasures->size(); ++i)
@@ -284,39 +355,19 @@ vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date e
 //----- Fin de Méthode
 
 //------------------------------------------------- Surcharge d'opérateurs
-Service &Service::operator=(const Service &unService)
-// Algorithme :
-//
-{
-} //----- Fin de operator =
+
 
 //-------------------------------------------- Constructeurs - destructeur
-Service::Service(const Service &unService)
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au constructeur de copie de <Service>" << endl;
-#endif
-} //----- Fin de Service (constructeur de copie)
 
-Service::Service()
+Service::Service(Database * db)
 // Algorithme :
 //
 {
+    this->database = db;
 #ifdef MAP
     cout << "Appel au constructeur de <Service>" << endl;
 #endif
 } //----- Fin de Service
-
-Service::~Service()
-// Algorithme :
-//
-{
-#ifdef MAP
-    cout << "Appel au destructeur de <Service>" << endl;
-#endif
-} //----- Fin de ~Service
 
 //------------------------------------------------------------------ PRIVE
 

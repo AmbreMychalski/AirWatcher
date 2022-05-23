@@ -221,6 +221,11 @@ void Database::initialiseUser(string fileName){
 }
 
 
+Database::Database(){
+  this->initialiseDB("../datasets/attributes.csv","../datasets/measurements.csv","../datasets/sensors.csv","../datasets/cleaners.csv","../datasets/providers.csv","../datasets/users.csv");
+}
+
+
 
 
 //-------------------------------------------- Constructeurs - destructeur

@@ -86,6 +86,13 @@ public:
     // Contrat :
     //
 
+    bool operator <( const Sensor& s )const
+    // Algorithme :
+    //
+    {
+        return (this->id<s.getId());
+    }
+
 //------------------------------------------------------------------ PRIVE
 
 protected:

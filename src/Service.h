@@ -66,14 +66,14 @@ public:
     // Contrat :
     // Renvoie le nombre de points gagnés par l'utilisateur
 
-    const std::vector<Sensor *> *Service::getUserSensors(string userId) const;
+    const vector<Sensor *>* getUserSensors(string userId) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Renvoie les capteurs associés à un utilisateur
 
-    const std::vector<Cleaner *> *Service::getProviderCleaners(string providerId) const;
+    const std::vector<Cleaner *> *getProviderCleaners(string providerId) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -86,16 +86,6 @@ public:
     //
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
-
-    //------------------------------------------------------------------ PRIVE
-
-private:
-    Database *database;
-    //----------------------------------------------------- Méthodes privées
-
-    //----------------------------------------------------- Attributs privés
-protected:
-    //----------------------------------------------------- Méthodes protégées
 
     void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]) const;
     // type Méthode ( liste des paramètres );
@@ -118,6 +108,20 @@ protected:
     //
     // Contrat :
     // Retourne la liste des mesures faites par le capteur pendant la période donnée
+
+    Service(Database * db);
+
+    //------------------------------------------------------------------ PRIVE
+
+private:
+    Database *database;
+    //----------------------------------------------------- Méthodes privées
+
+    //----------------------------------------------------- Attributs privés
+protected:
+    //----------------------------------------------------- Méthodes protégées
+
+    
 
     //----------------------------------------------------- Attributs protégés
 };

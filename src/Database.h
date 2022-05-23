@@ -54,7 +54,7 @@ public:
 //-------------------------------------------- Constructeurs - destructeur
     
 
-    Database ( ){};
+    Database();
     // Mode d'emploi :
     //
     // Contrat :
