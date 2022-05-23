@@ -245,7 +245,7 @@ int Service::computeATMOIndex(double o3, double so2, double no2, double pm10) co
     {
         if (pm10 >= PM_10[i] || no2 >= NO_2[i] || so2 >= SO_2[i] || o3 >= O_3[i])
         {
-            index = THRESHOLD_STEP - i;
+            return THRESHOLD_STEP - i;
         }
     }
     return index;    
