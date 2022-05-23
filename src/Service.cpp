@@ -172,8 +172,8 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
         double long1 = center.second;
         double lat2 = sensor.getCoords().first;
         double long2 = sensor.getCoords().second;
-        double distance = 1.609344*3963.0 * acos((sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 - long1));
-        distanceSum += distance;
+        long double dist = distance(lat1,long1,lat2,long2);
+        distanceSum += dist;
     }
 
     // Pour chaque type de mesure de chaque capteur, on fait leur moyenne sur
@@ -189,8 +189,8 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
         double long1 = center.second;
         double lat2 = sensor.getCoords().first;
         double long2 = sensor.getCoords().second;
-        double distance = 1.609344*3963.0 * acos((sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 - long1));
-        double ponderation = (1 - distance / distanceSum) / (LENGTH - 1);
+        long double dist = distance(lat1,long1,lat2,long2);
+        double ponderation = (1 - dist / distanceSum) / (LENGTH - 1);
 
         for (int i = 0; i < NB_ATTRIBUTES; ++i)
         {
