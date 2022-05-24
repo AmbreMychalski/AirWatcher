@@ -33,7 +33,7 @@ all: SRCS := $(filter-out %mainTest.cpp, $(SRCS))
 all: initobj initdist clean
 all: $(DIST)
 
-test: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
+# test: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
 test: SRCS := $(filter-out %main.cpp, $(SRCS))
 test: initobj initdist clean
 test: $(DIST)
