@@ -61,4 +61,10 @@ int main()
     }
 
     cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";
+
+
+    vector<std::pair<Sensor *, double>> * listSim= s.computeSimilarity("Sensor0",sensorsList, d1, d2);
+    for (pair<Sensor *, double> p : *listSim){
+        cout<<p.first->getId()<<" "<<p.second<<"\n";
+    }
 }
