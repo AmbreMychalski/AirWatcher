@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Database> (fichier Database.h) ----------------
-#if ! defined ( DATABASE_H )
+#if !defined(DATABASE_H)
 #define DATABASE_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -26,10 +26,10 @@
 
 class Database
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
+    //----------------------------------------------------- Méthodes publiques
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -40,19 +40,18 @@ public:
     void initialiseMesure(string fMesure, vector<Attribute> attributeList);
     void initialiseSensor(string fsensor);
     void initialiseCleaner(string fcleaner);
-    void initialiseProvider(string fprovider);    
+    void initialiseProvider(string fprovider);
     void initialiseUser(string fuser);
     vector<Sensor> getSensorList();
-    vector<Cleaner> getCleanerList();    
-    vector<Provider> getProviderList();  
+    vector<Cleaner> getCleanerList();
+    vector<Provider> getProviderList();
     vector<User> getUserList();
-    Cleaner getCleanerByid(string cleanerId);
-    Sensor getSensorByid(string sensorId);
+    Cleaner *getCleanerById(string cleanerId);
+    Sensor *getSensorById(string sensorId);
+    User *getUserById(string userId);
+    Provider *getProviderById(string providerId);
 
-//------------------------------------------------- Surcharge d'opérateurs
-  
-//-------------------------------------------- Constructeurs - destructeur
-    
+    //------------------------------------------------- Surcharge d'opérateurs
 
     Database();
     // Mode d'emploi :
@@ -60,25 +59,24 @@ public:
     // Contrat :
     //
 
-    virtual ~Database ( ){};
+    virtual ~Database(){};
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-//------------------------------------------------------------------ PRIVE
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     vector<User> userList;
     vector<Sensor> sensorList;
-    vector<Cleaner> cleanerList;  
+    vector<Cleaner> cleanerList;
     vector<Provider> providerList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Database>
 
-#endif 
-
+#endif

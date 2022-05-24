@@ -51,43 +51,63 @@ public:
     // Renvoie la liste des capteurs de sensorList associés à leur similarité
     // par rapport au capteur de référence, sur une période donnée
 
-    double computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES]) const;
+    double computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la moyenne de la qualité de l’air à un endroit donné sur une période donnée
-    // (pondération sur les mesures puis renvoie de l’indice ATM
+    // (pondération sur les mesures puis renvoie de l’indice ATMO)
 
-    int getUserPoints(string userId) const;
+    int getUserPoints(string userId);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Renvoie le nombre de points gagnés par l'utilisateur
 
-    const vector<Sensor *>* getUserSensors(string userId) const;
+    std::vector<Sensor *> *getUserSensors(string userId);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Renvoie les capteurs associés à un utilisateur
 
-    const std::vector<Cleaner *> *getProviderCleaners(string providerId) const;
+    std::vector<Cleaner *> *getProviderCleaners(string providerId);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Renvoie les cleaners associés à une entreprise
 
-    int computeATMOIndex(double o3, double so2, double no2, double pm10) const;
+    int computeATMOIndex(double o3, double so2, double no2, double pm10);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
 
-    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]) const;
+    bool isProviderIdValid(string id);
+    // Mode d'emploi :
+    // id est l'identifiant de l'entreprise
+    // Contrat :
+    // Retourne vrai si l'entreprise existe dans la base de données.
+    // Sinon, retourne faux.
+
+    bool isUserIdValid(string id);
+    // Mode d'emploi :
+    // id est l'identifiant de l'individu privé
+    // Contrat :
+    // Retourne vrai si l'individu privé existe dans la base de données.
+    // Sinon, retourne faux.
+
+    Service();
+    // Constructeur
+
+protected:
+    //----------------------------------------------------- Méthodes protégées
+
+    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -95,35 +115,29 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    vector<Sensor> *filterNeighbours(pair<double, double> coords) const;
+    vector<Sensor> *filterNeighbours(pair<double, double> coords);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
 
-    vector<Measure> *filterByPeriod(std::string sensorId, Date startdate, Date endDate) const;
+    vector<Measure> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des mesures faites par le capteur pendant la période donnée
 
-    Service(Database * db);
+    Service(Database db);
 
     //------------------------------------------------------------------ PRIVE
 
 private:
-    Database *database;
+    Database database;
     //----------------------------------------------------- Méthodes privées
 
     //----------------------------------------------------- Attributs privés
-protected:
-    //----------------------------------------------------- Méthodes protégées
-
-    
-
-    //----------------------------------------------------- Attributs protégés
 };
 
 //-------------------------------- Autres définitions dépendantes de <Service>
