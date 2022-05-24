@@ -5,19 +5,19 @@
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
-#include <string>
-#include <iostream>
-#include <vector>
-#include "Measure.h"
 
-using namespace std;
 
 //---------- Interface de la classe <Sensor> (fichier Sensor.h) ----------------
 #if !defined(Sensor_H)
 #define Sensor_H
 
 //--------------------------------------------------- Interfaces utilisées
+#include <string>
+#include <iostream>
+#include <vector>
+#include "Measure.h"
 
+using namespace std;
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types

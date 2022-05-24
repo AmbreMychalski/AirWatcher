@@ -9,6 +9,8 @@
 //---------- Interface de la classe <Measure> (fichier Measure.h) ----------------
 #if !defined(Measure_H)
 #define Measure_H
+
+#include <iostream>
 #include "Attribute.h"
 #include "Date.h"
 //

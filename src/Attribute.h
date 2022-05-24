@@ -19,6 +19,7 @@
 
 //--------------------------------------------------- Interfaces utilisées
 #include <string>
+#include <iostream>
 using namespace std;
 //------------------------------------------------------------- Constantes
 

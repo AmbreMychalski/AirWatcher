@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    Service s = Service();
+    Service s;
 
     vector<Sensor *> sensorsList = s.getSensorList();
     cout << "sensors : \n";
