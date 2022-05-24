@@ -21,30 +21,30 @@
 //----------------------------------------------------------------- PUBLIC
 
 //----------------------------------------------------- Méthodes publiques
-vector<Sensor> Database::getSensorList()
+vector<Sensor *> Database::getSensorList()
 {
   return sensorList;
 }
-vector<Cleaner> Database::getCleanerList()
+vector<Cleaner *> Database::getCleanerList()
 {
   return cleanerList;
 }
-vector<User> Database::getUserList()
+vector<User *> Database::getUserList()
 {
   return userList;
 }
-vector<Provider> Database::getProviderList()
+vector<Provider *> Database::getProviderList()
 {
   return providerList;
 }
 
 Cleaner *Database::getCleanerById(string cleanerId)
 {
-  for (Cleaner cleaner : cleanerList)
+  for (Cleaner *cleaner : cleanerList)
   {
-    if (cleaner.getId().compare(cleanerId))
+    if (cleaner->getId().compare(cleanerId))
     {
-      return &cleaner;
+      return cleaner;
     }
   }
   return nullptr;
@@ -52,11 +52,11 @@ Cleaner *Database::getCleanerById(string cleanerId)
 
 Sensor *Database::getSensorById(string sensorId)
 {
-  for (Sensor sensor : sensorList)
+  for (Sensor *sensor : sensorList)
   {
-    if (sensor.getId().compare(sensorId))
+    if (sensor->getId().compare(sensorId))
     {
-      return &sensor;
+      return sensor;
     }
   }
   return nullptr;
@@ -64,11 +64,11 @@ Sensor *Database::getSensorById(string sensorId)
 
 User *Database::getUserById(string userId)
 {
-  for (User user : userList)
+  for (User *user : userList)
   {
-    if (user.getId().compare(userId))
+    if (user->getId().compare(userId))
     {
-      return &user;
+      return user;
     }
   }
   return nullptr;
@@ -76,11 +76,11 @@ User *Database::getUserById(string userId)
 
 Provider *Database::getProviderById(string providerId)
 {
-  for (Provider provider : providerList)
+  for (Provider *provider : providerList)
   {
-    if (provider.getId().compare(providerId))
+    if (provider->getId().compare(providerId))
     {
-      return &provider;
+      return provider;
     }
   }
   return nullptr;
@@ -132,7 +132,7 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
   string year, month, day, hour, minute, seconde;
   Attribute att;
   Date date;
-  Sensor *lastSensor = &sensorList.at(0);
+  Sensor *lastSensor = sensorList.at(0);
   stream.open(fileName.c_str());
 
   getline(stream, year, '-');
@@ -159,11 +159,11 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
     if (lastSensor->getId() != sensorId)
     {
       int index = 0;
-      while (index < sensorList.size() && sensorList.at(index).getId() != sensorId)
+      while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
       {
         index++;
       }
-      lastSensor = &sensorList.at(index);
+      lastSensor = sensorList.at(index);
     }
     lastSensor->addMeasure(Measure(stod(value), date, att, sensorId));
     getline(stream, temp, '\n');
@@ -186,7 +186,7 @@ void Database::initialiseSensor(string fileName)
   {
     getline(stream, lat, ';');
     getline(stream, lon, ';');
-    sensorList.push_back(Sensor(id, true, stod(lat), stod(lon)));
+    sensorList.push_back(new Sensor(id, true, stod(lat), stod(lon)));
     getline(stream, temp, '\n');
     getline(stream, id, ';');
   }
@@ -229,7 +229,7 @@ void Database::initialiseCleaner(string fileName)
         end = Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
       }
     }
-    cleanerList.push_back(Cleaner(id, coords, start, end));
+    cleanerList.push_back(new Cleaner(id, coords, start, end));
     getline(stream, temp, '\n');
     getline(stream, id, ';');
   }
@@ -249,12 +249,12 @@ void Database::initialiseProvider(string fileName)
   {
     getline(stream, cleanerId, ';');
 
-    providerList.push_back(Provider(id));
-    for (Cleaner c : cleanerList)
+    providerList.push_back(new Provider(id));
+    for (Cleaner * c : cleanerList)
     {
-      if (c.getId() == cleanerId)
+      if (c->getId() == cleanerId)
       {
-        providerList.back().addCleaner(&c);
+        providerList.back()->addCleaner(c);
       }
     }
     getline(stream, temp, '\n');
@@ -276,12 +276,12 @@ void Database::initialiseUser(string fileName)
   {
     getline(stream, sensorId, ';');
 
-    userList.push_back(User(id));
-    for (Sensor s : sensorList)
+    userList.push_back(new User(id));
+    for (Sensor *s : sensorList)
     {
-      if (s.getId() == sensorId)
+      if (s->getId() == sensorId)
       {
-        userList.back().addSensor(&s);
+        userList.back()->addSensor(s);
       }
     }
     getline(stream, temp, '\n');

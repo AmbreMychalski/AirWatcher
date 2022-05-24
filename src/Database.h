@@ -42,10 +42,10 @@ public:
     void initialiseCleaner(string fcleaner);
     void initialiseProvider(string fprovider);
     void initialiseUser(string fuser);
-    vector<Sensor> getSensorList();
-    vector<Cleaner> getCleanerList();
-    vector<Provider> getProviderList();
-    vector<User> getUserList();
+    vector<Sensor *> getSensorList();
+    vector<Cleaner *> getCleanerList();
+    vector<Provider *> getProviderList();
+    vector<User *> getUserList();
     Cleaner *getCleanerById(string cleanerId);
     Sensor *getSensorById(string sensorId);
     User *getUserById(string userId);
@@ -71,10 +71,10 @@ protected:
     //----------------------------------------------------- Méthodes protégées
 
     //----------------------------------------------------- Attributs protégés
-    vector<User> userList;
-    vector<Sensor> sensorList;
-    vector<Cleaner> cleanerList;
-    vector<Provider> providerList;
+    vector<User*> userList;
+    vector<Sensor*> sensorList;
+    vector<Cleaner*> cleanerList;
+    vector<Provider*> providerList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Database>
