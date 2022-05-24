@@ -144,7 +144,7 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
         // Normaliser les distances entre 0 et 1
         for (pair<Sensor *, double> elemDistance : distanceList)
         {
-            elemDistance.second < -elemDistance.second / distanceMax;
+            elemDistance.second = elemDistance.second / distanceMax;
         }
     }
     for (pair<Sensor *, double> elemNormalizedDistance : distanceList)
@@ -258,7 +258,6 @@ void Service::computeMean(const vector<Measure *> measures, double (&returnArray
     double no2 = 0;
     double pm10 = 0;
     double nbO3, nbSo2, nbNo2, nbPm10 = 0;
-    const int LENGTH = measures.size();
     for (Measure * measure : measures)
     {
         if (measure->getAttribute().getId() == "O3")
@@ -328,7 +327,6 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
 
 vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
-    int i = 0;
     Sensor *sensor = database.getSensorById(sensorId);
     if (sensor == nullptr)
     {
@@ -337,7 +335,7 @@ vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date
     const vector<Measure *> allMeasures = sensor->getMeasureList();
 
     std::vector<Measure *> *targetMeasures = new std::vector<Measure *>;
-    for (int i = 0; i < allMeasures.size(); ++i)
+    for (long unsigned int i = 0; i < allMeasures.size(); ++i)
     {
         Date date = allMeasures[i]->getDate();
         if (startDate <= date && date <= endDate)
@@ -389,6 +387,16 @@ Service::Service()
 #ifdef MAP
     cout
         << "Appel au constructeur de <Service>" << endl;
+#endif
+} //----- Fin de Service
+
+Service::~Service()
+// Algorithme :
+//
+{
+#ifdef MAP
+    cout
+        << "Appel au destructeur de <Service>" << endl;
 #endif
 } //----- Fin de Service
 

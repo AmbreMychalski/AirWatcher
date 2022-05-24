@@ -103,6 +103,7 @@ public:
     // Sinon, retourne faux.
 
     Service();
+    ~Service();
     // Constructeur
 
     vector<Sensor *> getSensorList();
