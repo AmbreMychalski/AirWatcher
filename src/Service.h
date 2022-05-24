@@ -111,6 +111,11 @@ public:
     vector<Provider *> getProviderList();
     vector<User *> getUserList();
 
+    /*
+    User *getUserById(string id);
+    Provider *getProviderById(string id);
+    */
+
     void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
