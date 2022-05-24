@@ -59,7 +59,7 @@ public:
     // Contrat :
     //
 
-    virtual ~Database();
+    virtual ~Database(){};
     // Mode d'emploi :
     //
     // Contrat :

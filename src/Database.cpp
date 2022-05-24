@@ -158,7 +158,7 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
     getline(stream, value, ';');
     if (lastSensor->getId() != sensorId)
     {
-      long unsigned int index = 0;
+      int index = 0;
       while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
       {
         index++;
@@ -290,34 +290,13 @@ void Database::initialiseUser(string fileName)
   stream.close();
 }
 
-//-------------------------------------------- Constructeurs - destructeur
 Database::Database()
 {
   this->initialiseDB("../datasets/attributes.csv", "../datasets/measurements.csv", "../datasets/sensors.csv", "../datasets/cleaners.csv", "../datasets/providers.csv", "../datasets/users.csv");
 }
 
-Database::~Database()
-{
-  for (User *user : userList)
-  {
-    delete user;
-  }
+//-------------------------------------------- Constructeurs - destructeur
 
-  for (Sensor *sensor : sensorList)
-  {
-    delete sensor;
-  }
-
-  for (Cleaner *cleaner : cleanerList)
-  {
-    delete cleaner;
-  }
-
-  for (Provider *provider : providerList)
-  {
-    delete provider;
-  }
-}
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
