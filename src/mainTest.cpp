@@ -8,8 +8,9 @@ using namespace std;
 
 int main()
 {
+    cout << "coucou" << endl;
     Service s = Service();
-
+    /*
     vector<Sensor *> sensorsList = s.getSensorList();
     cout << "sensors : \n";
     for (Sensor *sensors : sensorsList)
@@ -60,5 +61,5 @@ int main()
         cout << res[i] << "\n";
     }
 
-    cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";
+    cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";*/
 }

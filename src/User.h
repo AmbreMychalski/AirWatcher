@@ -93,6 +93,9 @@ public:
 
     User(string id_) : id(id_)
     {
+#ifdef MAP
+    cout << "Appel au constructeur de <User>" << endl;
+#endif
         nbPoints = 0;
     }
     // Mode d'emploi :
@@ -100,7 +103,11 @@ public:
     // Contrat :
     //
 
-    virtual ~User(){};
+    virtual ~User(){
+#ifdef MAP
+    cout << "Appel au destructeur de <User>" << endl;
+#endif
+    };
     // Mode d'emploi :
     //
     // Contrat :

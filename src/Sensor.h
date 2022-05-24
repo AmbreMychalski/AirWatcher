@@ -75,10 +75,17 @@ public:
     }
 
     //-------------------------------------------- Constructeurs - destructeur
-    Sensor() {}
+    Sensor() {
+#ifdef MAP
+    cout << "Appel au constructeur de <Sensor>" << endl;
+#endif
+    }
 
     Sensor(string id, bool reliable, double x, double y)
     {
+#ifdef MAP
+    cout << "Appel au constructeur de <Sensor>" << endl;
+#endif
         this->id = id;
         this->reliable = reliable;
         // pair <double, double> coordonnees=make_pair(x, y);
@@ -89,7 +96,11 @@ public:
     // Contrat :
     //
 
-    virtual ~Sensor() {}
+    virtual ~Sensor() {
+#ifdef MAP
+    cout << "Appel au destructeur de <Sensor>" << endl;
+#endif
+    }
     // Mode d'emploi :
     //
     // Contrat :

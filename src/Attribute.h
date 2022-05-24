@@ -72,18 +72,29 @@ public:
     Attribute ( ){}
 
     Attribute ( const Attribute & aAttribute ){
+#ifdef MAP
+    cout << "Appel au constructeur par copie de <Attribute>" << endl;
+#endif
         this->id = aAttribute.getId();
         this->unit = aAttribute.getUnit();
         this->description = aAttribute.getDescription();
     }
 
-    Attribute(string id_, string unit_, string description_ ):id(id_),unit(unit_),description(description_){}
+    Attribute(string id_, string unit_, string description_ ):id(id_),unit(unit_),description(description_){
+#ifdef MAP
+    cout << "Appel au constructeur de <Attribute>" << endl;
+#endif
+    }
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~Attribute ( ){};
+    virtual ~Attribute ( ){
+#ifdef MAP
+    cout << "Appel au destructeur de <Attribute>" << endl;
+#endif
+    };
     // Mode d'emploi :
     //
     // Contrat :
