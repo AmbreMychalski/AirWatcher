@@ -51,7 +51,7 @@ public:
         return cleanerList.size();
     }
 
-    const vector<Cleaner *> *getCleanerList() const
+    vector<Cleaner *> *getCleanerList()
     {
         return &(cleanerList);
     }

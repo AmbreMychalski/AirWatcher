@@ -5,15 +5,15 @@
     copyright            : (C) $YEAR$ par $AUTHOR$
     e-mail               : $EMAIL$
 *************************************************************************/
-#include<string>
-#include<iostream>
-#include<vector>
+#include <string>
+#include <iostream>
+#include <vector>
 #include "Measure.h"
 
 using namespace std;
 
 //---------- Interface de la classe <Sensor> (fichier Sensor.h) ----------------
-#if ! defined ( Sensor_H )
+#if !defined(Sensor_H)
 #define Sensor_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -28,84 +28,92 @@ using namespace std;
 //
 //------------------------------------------------------------------------
 
-class Sensor 
+class Sensor
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    void setId(string id){
+    //----------------------------------------------------- Méthodes publiques
+    void setId(string id)
+    {
         this->id = id;
     }
 
-    void setReliable(bool reliable){
+    void setReliable(bool reliable)
+    {
         this->reliable = reliable;
     }
 
-    void setCoords(double x, double y){
+    void setCoords(double x, double y)
+    {
         this->coords = make_pair(x, y);
     }
 
-    void addMeasure(Measure measure){
+    void addMeasure(Measure measure)
+    {
         this->measureList.push_back(measure);
     }
 
-    string getId( ) const {
+    string getId() const
+    {
         return this->id;
     }
 
-    bool getReliable( ) const {
+    bool getReliable() const
+    {
         return this->reliable;
     }
 
-    pair<double,double> getCoords( ) const {
+    pair<double, double> getCoords() const
+    {
         return this->coords;
     }
 
-    const vector <Measure>* getMeasureList( ) const {
+    const vector<Measure> *getMeasureList() const
+    {
         return &(this->measureList);
     }
 
-//-------------------------------------------- Constructeurs - destructeur
-    Sensor ( ){}
+    //-------------------------------------------- Constructeurs - destructeur
+    Sensor() {}
 
-    Sensor ( string id, bool reliable, double x, double y){
-        this->id=id;
-        this->reliable=reliable;
-        //pair <double, double> coordonnees=make_pair(x, y);
-        this->coords =make_pair(x, y);
+    Sensor(string id, bool reliable, double x, double y)
+    {
+        this->id = id;
+        this->reliable = reliable;
+        // pair <double, double> coordonnees=make_pair(x, y);
+        this->coords = make_pair(x, y);
     }
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~Sensor ( ){}
+    virtual ~Sensor() {}
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    bool operator <( const Sensor& s )const
+    bool operator<(const Sensor &s) const
     // Algorithme :
     //
     {
-        return (this->id<s.getId());
+        return (this->id < s.getId());
     }
 
-//------------------------------------------------------------------ PRIVE
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     string id;
     bool reliable;
-    pair<double,double> coords;
+    pair<double, double> coords;
     vector<Measure> measureList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>
 
 #endif // Sensor_H
-

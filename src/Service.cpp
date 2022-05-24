@@ -200,10 +200,10 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
     return computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
 }
 
-int Service::getUserPoints(string userId) const
+int Service::getUserPoints(string userId)
 {
     int nbPoints = 0;
-    for (User user : database->getUserList())
+    for (User user : database.getUserList())
     {
         if (user.getId().compare(userId))
         {
@@ -213,7 +213,7 @@ int Service::getUserPoints(string userId) const
     return nbPoints;
 }
 
-const std::vector<Sensor *> *Service::getUserSensors(string userId) const
+std::vector<Sensor *> *Service::getUserSensors(string userId)
 {
     for (User user : database.getUserList())
     {
@@ -225,7 +225,7 @@ const std::vector<Sensor *> *Service::getUserSensors(string userId) const
     return NULL;
 }
 
-std::vector<Cleaner *> *Service::getProviderCleaners(string providerId)
+vector<Cleaner *> *Service::getProviderCleaners(string providerId)
 {
     Provider *provider = database.getProviderById(providerId);
     if (provider != nullptr)
@@ -327,7 +327,7 @@ vector<Sensor> *Service::filterNeighbours(pair<double, double> coords)
 vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
     int i = 0;
-    vector<Sensor> sensorList = database->getSensorList();
+    vector<Sensor> sensorList = database.getSensorList();
     const int LENGTH = sensorList.size();
     while (i < LENGTH && sensorList[i].getId() != sensorId)
     {
@@ -354,12 +354,29 @@ vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date e
 
 bool Service::isProviderIdValid(std::string id)
 {
-    return database.getProviderById() != nullptr;
+    return database.getProviderById(id) != nullptr;
 }
 
 bool Service::isUserIdValid(std::string id)
 {
-    return database.getUserById() != nullptr;
+    return database.getUserById(id) != nullptr;
+}
+
+vector<Sensor> Service::getSensorList()
+{
+    return database.getSensorList();
+}
+vector<Cleaner> Service::getCleanerList()
+{
+    return database.getCleanerList();
+}
+vector<User> Service::getUserList()
+{
+    return database.getUserList();
+}
+vector<Provider> Service::getProviderList()
+{
+    return database.getProviderList();
 }
 
 //----- Fin de Méthode

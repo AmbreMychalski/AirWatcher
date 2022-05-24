@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <User> (fichier User.h) ----------------
-#if ! defined ( USER_H )
+#if !defined(USER_H)
 #define USER_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -26,91 +26,99 @@ using namespace std;
 //
 //------------------------------------------------------------------------
 
-class User 
+class User
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    string getId() const {
+    //----------------------------------------------------- Méthodes publiques
+    string getId() const
+    {
         return id;
     }
 
-    string getEmail() const {
+    string getEmail() const
+    {
         return email;
     }
 
-    string getPassword() const {
+    string getPassword() const
+    {
         return password;
     }
 
-    int getNbPoints() const {
+    int getNbPoints() const
+    {
         return nbPoints;
     }
 
-    int getNbSensor() const {
+    int getNbSensor() const
+    {
         return sensorList.size();
     }
 
-    const vector<Sensor *>* getSensorList() const {
+    vector<Sensor *> *getSensorList()
+    {
         return &(sensorList);
     }
 
-    void setId(string id_){
+    void setId(string id_)
+    {
         this->id = id_;
     }
 
-    void setPassword(string password_){
+    void setPassword(string password_)
+    {
         this->password = password_;
     }
 
-    void setNbPoints(int nbPoints_){
+    void setNbPoints(int nbPoints_)
+    {
         this->nbPoints = nbPoints_;
     }
 
-    void addSensor(Sensor *sensor){
+    void addSensor(Sensor *sensor)
+    {
         this->sensorList.push_back(sensor);
     }
-    
-    bool isReliable(){
-       return (*sensorList.begin())->getReliable();
+
+    bool isReliable()
+    {
+        return (*sensorList.begin())->getReliable();
     }
 
-//------------------------------------------------- Surcharge d'opérateurs
-  
-//-------------------------------------------- Constructeurs - destructeur
-  
-    User(string id_):
-    id(id_){
-        nbPoints=0;
+    //------------------------------------------------- Surcharge d'opérateurs
+
+    //-------------------------------------------- Constructeurs - destructeur
+
+    User(string id_) : id(id_)
+    {
+        nbPoints = 0;
     }
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~User ( ){};
+    virtual ~User(){};
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-//------------------------------------------------------------------ PRIVE
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     string id;
     string email;
     string password;
     int nbPoints;
-    vector <Sensor *> sensorList;
-
-
+    vector<Sensor *> sensorList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Xxx>
 
 #endif // USER_H
-

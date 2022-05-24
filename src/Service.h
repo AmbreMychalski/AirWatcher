@@ -43,7 +43,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    std::vector<std::pair<Sensor, double>> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const;
+    std::vector<std::pair<Sensor, double>> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -104,8 +104,10 @@ public:
     Service();
     // Constructeur
 
-protected:
-    //----------------------------------------------------- Méthodes protégées
+    vector<Sensor> getSensorList();
+    vector<Cleaner> getCleanerList();
+    vector<Provider> getProviderList();
+    vector<User> getUserList();
 
     void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
@@ -129,8 +131,8 @@ protected:
     // Contrat :
     // Retourne la liste des mesures faites par le capteur pendant la période donnée
 
-    Service(Database db);
-
+protected:
+    //----------------------------------------------------- Méthodes protégées
     //------------------------------------------------------------------ PRIVE
 
 private:
