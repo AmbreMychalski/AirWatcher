@@ -42,6 +42,7 @@ int main()
     Date d1(2019, 1, 1, 0, 0, 0);
     Date d2(2019, 2, 7, 0, 0, 0);
     vector<Measure *> *listM = s.filterByPeriod("Sensor1", d1, d2);
+     cout << "Mesures du sensor 1 : \n";
     for (Measure *m : *listM)
     {
         cout << m->getAttribute().getId() << " :" << m->getValue() << "\n";

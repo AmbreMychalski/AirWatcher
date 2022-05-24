@@ -342,6 +342,7 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
 vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
     Sensor *sensor = database.getSensorById(sensorId);
+    cout<<"laaaa "<<sensor->getId()<<endl;
     if (sensor == nullptr)
     {
         return nullptr;
