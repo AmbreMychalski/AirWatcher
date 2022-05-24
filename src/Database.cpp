@@ -290,13 +290,34 @@ void Database::initialiseUser(string fileName)
   stream.close();
 }
 
+//-------------------------------------------- Constructeurs - destructeur
 Database::Database()
 {
   this->initialiseDB("../datasets/attributes.csv", "../datasets/measurements.csv", "../datasets/sensors.csv", "../datasets/cleaners.csv", "../datasets/providers.csv", "../datasets/users.csv");
 }
 
-//-------------------------------------------- Constructeurs - destructeur
+Database::~Database()
+{
+  for (User *user : userList)
+  {
+    delete user;
+  }
 
+  for (Sensor *sensor : sensorList)
+  {
+    delete sensor;
+  }
+
+  for (Cleaner *cleaner : cleanerList)
+  {
+    delete cleaner;
+  }
+
+  for (Provider *provider : providerList)
+  {
+    delete provider;
+  }
+}
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées

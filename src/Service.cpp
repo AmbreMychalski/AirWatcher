@@ -131,6 +131,7 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
                         distance = distance + abs(meanRefTab[i] - meanTab[i]);
                     }
                 }
+                delete measureList;
             }
         }
         distanceList.push_back(make_pair(sensor, distance));
@@ -195,6 +196,8 @@ int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<
         {
             returnArray[i] = returnArray[i] + measuresMean[i] * ponderation;
         }
+
+        delete measuresList;
     }
     return computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
 }
