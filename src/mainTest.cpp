@@ -8,9 +8,8 @@ using namespace std;
 
 int main()
 {
-    cout << "coucou" << endl;
     Service s = Service();
-    /*
+
     vector<Sensor *> sensorsList = s.getSensorList();
     cout << "sensors : \n";
     for (Sensor *sensors : sensorsList)
@@ -27,7 +26,7 @@ int main()
 
     vector<Provider *> providersList = s.getProviderList();
     cout << "providers : \n";
-    for (Provider * provider : providersList)
+    for (Provider *provider : providersList)
     {
         cout << provider->getId() << "\n";
     }
@@ -42,14 +41,14 @@ int main()
     Date d1(2019, 1, 3, 0, 0, 0);
     Date d2(2019, 1, 7, 0, 0, 0);
     vector<Measure *> *listM = s.filterByPeriod("Sensor1", d1, d2);
-    for (Measure * m : *listM)
+    for (Measure *m : *listM)
     {
         cout << m->getAttribute().getId() << " :" << m->getValue() << "\n";
     }
 
     pair<double, double> coords = make_pair(44.4, 3.2);
     vector<Sensor *> *listS = s.filterNeighbours(coords);
-    for (Sensor * s : *listS)
+    for (Sensor *s : *listS)
     {
         cout << s->getId() << "\n";
     }
@@ -61,5 +60,5 @@ int main()
         cout << res[i] << "\n";
     }
 
-    cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";*/
+    cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";
 }
