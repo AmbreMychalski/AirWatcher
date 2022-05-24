@@ -90,11 +90,11 @@ long double distance(long double lat1, long double long1,
 
 //----------------------------------------------------- Méthodes publiques
 
-std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate)
+std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
     int i = 0;
     const int LENGTH = database.getSensorList().size();
-    while (i < LENGTH && database.getSensorList()[i].getId() != sensorId)
+    while (i < LENGTH && database.getSensorList()[i]->getId() != sensorId)
     {
         ++i;
     }
@@ -103,21 +103,21 @@ std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensor
         return NULL;
     }
 
-    const std::vector<Measure> *measureListRef = database.getSensorList()[i].getMeasureList();
+    const std::vector<Measure *> *measureListRef = database.getSensorList()[i]->getMeasureList();
     double meanRefTab[NB_ATTRIBUTES];
     double meanTab[NB_ATTRIBUTES];
     computeMean(*measureListRef, meanRefTab);
 
-    std::vector<std::pair<Sensor, double>> distanceList;
-    std::vector<std::pair<Sensor, double>> *similarityList = new std::vector<std::pair<Sensor, double>>;
+    std::vector<std::pair<Sensor *, double>> distanceList;
+    std::vector<std::pair<Sensor *, double>> *similarityList = new std::vector<std::pair<Sensor *, double>>;
     double distanceMax = 0;
-    for (Sensor sensor : sensorList)
+    for (Sensor *sensor : sensorList)
     {
         double distance = 0;
         // Si le capteur est bien distinct du capteur de référence
-        if (sensorId != sensor.getId())
+        if (sensorId != sensor->getId())
         {
-            std::vector<Measure> *measureList = filterByPeriod(sensor.getId(), startDate, endDate);
+            std::vector<Measure> *measureList = filterByPeriod(sensor->getId(), startDate, endDate);
 
             if (!measureList->empty())
             {
@@ -129,12 +129,12 @@ std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensor
                     // référence, à condition que ces valeurs existent bien
                     if (meanRefTab[i] >= 0 && meanTab[i] >= 0)
                     {
-                        distance = distance + pow(meanRefTab[i] - meanTab[i], 2);
+                        distance = distance + abs(meanRefTab[i] - meanTab[i]);
                     }
                 }
             }
         }
-        distanceList.push_back(make_pair(sensor, sqrt(distance)));
+        distanceList.push_back(make_pair(sensor, distance));
         distanceMax = max(distance, distanceMax);
     }
 
@@ -142,12 +142,12 @@ std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensor
     if (distanceMax != 0)
     {
         // Normaliser les distances entre 0 et 1
-        for (pair<Sensor, double> elemDistance : distanceList)
+        for (pair<Sensor *, double> elemDistance : distanceList)
         {
             elemDistance.second < -elemDistance.second / distanceMax;
         }
     }
-    for (pair<Sensor, double> elemNormalizedDistance : distanceList)
+    for (pair<Sensor *, double> elemNormalizedDistance : distanceList)
     {
         double similarity = 1 - elemNormalizedDistance.second;
         similarityList->push_back(make_pair(elemNormalizedDistance.first, similarity));
@@ -161,12 +161,12 @@ std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensor
 
 double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES])
 {
-    std::vector<Sensor> *listSensorNeighbours = filterNeighbours(center);
+    std::vector<Sensor *> *listSensorNeighbours = filterNeighbours(center);
     double distanceSum = 0;
 
     // On trouve la distance totale séparant les capteurs voisins du point
     // passé en paramètre
-    for (Sensor sensor : *listSensorNeighbours)
+    for (Sensor *sensor : *listSensorNeighbours)
     {
         double lat1 = center.first;
         double long1 = center.second;
@@ -180,7 +180,7 @@ double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pa
     // la période de temps, puis on pondère cette moyenne
     // par leur distance au point passé en paramètre
     const int LENGTH = listSensorNeighbours->size();
-    for (Sensor sensor : *listSensorNeighbours)
+    for (Sensor *sensor : *listSensorNeighbours)
     {
         std::vector<Measure> *measuresList = filterByPeriod(sensor.getId(), startDate, endDate);
         double measuresMean[NB_ATTRIBUTES];
@@ -286,17 +286,17 @@ void Service::computeMean(const vector<Measure> measures, double (&returnArray)[
     returnArray[3] = pm10 / nbPm10;
 }
 
-vector<Sensor> *Service::filterNeighbours(pair<double, double> coords)
+vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
 {
 
     if (coords.first < MIN_LATITUDE || coords.first > MAX_LATITUDE || coords.second < MIN_LONGITUDE || coords.second > MAX_LONGITUDE)
     {
         return NULL;
     }
-    std::vector<Sensor> *sensors = new std::vector<Sensor>;
+    std::vector<Sensor *> *sensors = new std::vector<Sensor *>;
     int i = 0;
 
-    vector<Sensor> sensorList = database.getSensorList();
+    vector<Sensor *> sensorList = database.getSensorList();
     const int LENGTH = sensorList.size();
     Sensor *sensorAtMinDistance = nullptr;
     double minDistance = 0;
@@ -304,11 +304,11 @@ vector<Sensor> *Service::filterNeighbours(pair<double, double> coords)
     while (i < LENGTH && sensors->size() < MAX_NEAREST_SENSORS_NUMBER)
     {
 
-        Sensor sensor = sensorList[i];
+        Sensor *sensor = sensorList[i];
         double lat1 = coords.first;
         double long1 = coords.second;
-        double lat2 = sensor.getCoords().first;
-        double long2 = sensor.getCoords().second;
+        double lat2 = sensor->getCoords().first;
+        double long2 = sensor->getCoords().second;
         long double dist = distance(lat1, long1, lat2, long2);
         if (dist < MAX_NEAREST_SENSORS_RADIUS)
         {
@@ -317,36 +317,30 @@ vector<Sensor> *Service::filterNeighbours(pair<double, double> coords)
         else if (sensorAtMinDistance == nullptr || dist < minDistance)
         {
             minDistance = dist;
-            sensorAtMinDistance = &sensor;
+            sensorAtMinDistance = sensor;
         }
         ++i;
     }
     return sensors;
 }
 
-vector<Measure> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
+vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
     int i = 0;
-    vector<Sensor> sensorList = database.getSensorList();
-    const int LENGTH = sensorList.size();
-    while (i < LENGTH && sensorList[i].getId() != sensorId)
+    Sensor *sensor = database.getSensorById(sensorId);
+    if (sensor == nullptr)
     {
-        ++i;
+        return nullptr
     }
-    if (i == LENGTH)
-    {
-        return NULL;
-    }
-    Sensor sensor = sensorList[i];
-    const vector<Measure> *allMeasures = sensor.getMeasureList();
+    const vector<Measure *> allMeasures = sensor->getMeasureList();
 
-    std::vector<Measure> *targetMeasures = new std::vector<Measure>;
-    for (int i = 0; i < allMeasures->size(); ++i)
+    std::vector<Measure *> *targetMeasures = new std::vector<Measure *>;
+    for (int i = 0; i < allMeasures.size(); ++i)
     {
-        Date date = (*allMeasures)[i].getDate();
+        Date date = allMeasures[i]->getDate();
         if (startDate <= date && date <= endDate)
         {
-            targetMeasures->push_back((*allMeasures)[i]);
+            targetMeasures->push_back(allMeasures[i]);
         }
     }
     return targetMeasures;
@@ -362,19 +356,19 @@ bool Service::isUserIdValid(std::string id)
     return database.getUserById(id) != nullptr;
 }
 
-vector<Sensor> Service::getSensorList()
+vector<Sensor *> Service::getSensorList()
 {
     return database.getSensorList();
 }
-vector<Cleaner> Service::getCleanerList()
+vector<Cleaner *> Service::getCleanerList()
 {
     return database.getCleanerList();
 }
-vector<User> Service::getUserList()
+vector<User *> Service::getUserList()
 {
     return database.getUserList();
 }
-vector<Provider> Service::getProviderList()
+vector<Provider *> Service::getProviderList()
 {
     return database.getProviderList();
 }

@@ -43,7 +43,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    std::vector<std::pair<Sensor, double>> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate);
+    std::vector<std::pair<Sensor *, double>> *computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -117,14 +117,14 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    vector<Sensor> *filterNeighbours(pair<double, double> coords);
+    vector<Sensor *> *filterNeighbours(pair<double, double> coords);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
 
-    vector<Measure> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
+    vector<Measure *> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
