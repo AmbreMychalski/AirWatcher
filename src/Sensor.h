@@ -49,7 +49,7 @@ public:
         this->coords = make_pair(x, y);
     }
 
-    void addMeasure(Measure measure)
+    void addMeasure(Measure *measure)
     {
         this->measureList.push_back(measure);
     }
@@ -69,9 +69,9 @@ public:
         return this->coords;
     }
 
-    const vector<Measure> *getMeasureList() const
+    vector<Measure *> getMeasureList()
     {
-        return &(this->measureList);
+        return measureList;
     }
 
     //-------------------------------------------- Constructeurs - destructeur
@@ -111,7 +111,7 @@ protected:
     string id;
     bool reliable;
     pair<double, double> coords;
-    vector<Measure> measureList;
+    vector<Measure *> measureList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>
