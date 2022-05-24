@@ -129,12 +129,12 @@ std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensor
                     // référence, à condition que ces valeurs existent bien
                     if (meanRefTab[i] >= 0 && meanTab[i] >= 0)
                     {
-                        distance = distance + pow(meanRefTab[i] - meanTab[i], 2);
+                        distance = distance + abs(meanRefTab[i] - meanTab[i]);
                     }
                 }
             }
         }
-        distanceList.push_back(make_pair(sensor, sqrt(distance)));
+        distanceList.push_back(make_pair(sensor, distance));
         distanceMax = max(distance, distanceMax);
     }
 
