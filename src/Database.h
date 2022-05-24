@@ -11,6 +11,7 @@
 #define DATABASE_H
 
 //--------------------------------------------------- Interfaces utilisées
+#include <iostream>
 #include "User.h"
 #include "Cleaner.h"
 #include "Provider.h"
