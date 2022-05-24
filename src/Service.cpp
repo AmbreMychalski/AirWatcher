@@ -395,11 +395,11 @@ Service::Service()
 // Algorithme :
 //
 {
-    database = Database();
 #ifdef MAP
     cout
         << "Appel au constructeur de <Service>" << endl;
 #endif
+    database = Database();
 } //----- Fin de Service
 
 Service::~Service()
