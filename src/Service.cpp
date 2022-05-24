@@ -397,11 +397,10 @@ Service::Service()
 // Algorithme :
 //
 {
-    database = Database();
 #ifdef MAP
-    cout
-        << "Appel au constructeur de <Service>" << endl;
+    cout << "Appel au constructeur de <Service>" << endl;
 #endif
+    //database = Database();
 } //----- Fin de Service
 
 Service::~Service()
@@ -409,8 +408,7 @@ Service::~Service()
 //
 {
 #ifdef MAP
-    cout
-        << "Appel au destructeur de <Service>" << endl;
+    cout << "Appel au destructeur de <Service>" << endl;
 #endif
 } //----- Fin de Service
 
