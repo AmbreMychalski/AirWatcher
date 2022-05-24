@@ -43,7 +43,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    std::map<Sensor, double> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const;
+    std::vector<std::pair<Sensor, double>> *computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const;
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //

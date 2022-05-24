@@ -40,8 +40,8 @@ const double O_3[] = {240, 210, 180, 150, 130, 105, 80, 55, 30, 0};
 
 // Driver function to sort the vector elements
 // by second element of pairs
-bool sortBySec(const pair<int, int> &a,
-               const pair<int, int> &b)
+bool sortBySec(const pair<Sensor, double> &a,
+               const pair<Sensor, double> &b)
 {
     return (a.second > b.second);
 }
@@ -90,7 +90,7 @@ long double distance(long double lat1, long double long1,
 
 //----------------------------------------------------- Méthodes publiques
 
-std::map<Sensor, double> *Service::computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const
+std::vector<std::pair<Sensor, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor> sensorList, Date startDate, Date endDate) const
 {
     int i = 0;
     const int LENGTH = database->getSensorList().size();
@@ -109,7 +109,7 @@ std::map<Sensor, double> *Service::computeSimilarity(string sensorId, std::vecto
     computeMean(*measureListRef, meanRefTab);
 
     std::vector<std::pair<Sensor, double>> distanceList;
-    std::map<Sensor, double> *similarityList = new std::map<Sensor, double>;
+    std::vector<std::pair<Sensor, double>> *similarityList = new std::vector<std::pair<Sensor, double>>;
     double distanceMax = 0;
     for (Sensor sensor : sensorList)
     {
@@ -150,7 +150,7 @@ std::map<Sensor, double> *Service::computeSimilarity(string sensorId, std::vecto
     for (pair<Sensor, double> elemNormalizedDistance : distanceList)
     {
         double similarity = 1 - elemNormalizedDistance.second;
-        similarityList->insert(make_pair(elemNormalizedDistance.first, similarity));
+        similarityList->push_back(make_pair(elemNormalizedDistance.first, similarity));
     }
 
     // Using sort() function to sort by 2nd element
