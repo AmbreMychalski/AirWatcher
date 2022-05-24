@@ -34,7 +34,6 @@ class Sensor
 
 public:
     //----------------------------------------------------- Méthodes publiques
-    
 
     void setId(string id);
 
@@ -53,6 +52,8 @@ public:
     vector<Measure *> getMeasureList() const;
 
     vector<Measure *> getMeasureList();
+
+    friend ostream &operator<<(ostream &stream, const Sensor &s);
 
     //-------------------------------------------- Constructeurs - destructeur
     Sensor();
