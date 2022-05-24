@@ -14,7 +14,8 @@ int main()
     cout << "sensors : \n";
     for (Sensor *sensors : sensorsList)
     {
-        cout << sensors->getId() << "\n";
+        cout << sensors->getId() << " ";
+        cout << sensors->getMeasureList().front()->getValue()<<"\n";
     }
 
     vector<Cleaner *> cleanersList = s.getCleanerList();
@@ -38,8 +39,8 @@ int main()
         cout << user->getId() << "\n";
     }
 
-    Date d1(2019, 1, 3, 0, 0, 0);
-    Date d2(2019, 1, 7, 0, 0, 0);
+    Date d1(2019, 1, 1, 0, 0, 0);
+    Date d2(2019, 2, 7, 0, 0, 0);
     vector<Measure *> *listM = s.filterByPeriod("Sensor1", d1, d2);
     for (Measure *m : *listM)
     {

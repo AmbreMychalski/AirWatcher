@@ -101,6 +101,7 @@ Provider *Service::getProviderById(string id)
 */
 
 Provider *getProviderById();
+
 std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
     int i = 0;
@@ -128,22 +129,23 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
         // Si le capteur est bien distinct du capteur de référence
         if (sensorId != sensor->getId())
         {
-            std::vector<Measure *> *measureList = filterByPeriod(sensor->getId(), startDate, endDate);
-
+            std::vector<Measure *>* measureList = filterByPeriod(sensor->getId(), startDate, endDate);
+            cout<<sensor->getId()<<" "<<(measureList->front()->getValue());
             if (!measureList->empty())
             {
                 computeMean(*measureList, meanTab);
+
                 for (int i = 0; i < NB_ATTRIBUTES; ++i)
-                {
+                {   
+                    cout<<meanTab[i]<<" ;";
                     /// Incrémenter la distance totale par la distance (au carré)
                     // entre les valeurs moyenne smesurées par ce capteur et le capteur de
                     // référence, à condition que ces valeurs existent bien
-                    if (meanRefTab[i] >= 0 && meanTab[i] >= 0)
-                    {
-                        distance = distance + abs(meanRefTab[i] - meanTab[i]);
-                    }
+
+                    distance = distance + abs(meanRefTab[i] - meanTab[i]);
                 }
                 // delete measureList;
+                cout<<endl;
             }
         }
         distanceList.push_back(make_pair(sensor, distance));
