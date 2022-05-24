@@ -34,6 +34,8 @@ class Sensor
 
 public:
     //----------------------------------------------------- Méthodes publiques
+    friend ostream &operator<<(ostream &stream, const Sensor &s);
+
     void setId(string id)
     {
         this->id = id;
@@ -75,10 +77,17 @@ public:
     }
 
     //-------------------------------------------- Constructeurs - destructeur
-    Sensor() {}
+    Sensor() {
+#ifdef MAP
+    cout << "Appel au constructeur de <Sensor>" << endl;
+#endif
+    }
 
     Sensor(string id, bool reliable, double x, double y)
     {
+#ifdef MAP
+    cout << "Appel au constructeur de <Sensor>" << endl;
+#endif
         this->id = id;
         this->reliable = reliable;
         // pair <double, double> coordonnees=make_pair(x, y);
@@ -89,7 +98,11 @@ public:
     // Contrat :
     //
 
-    virtual ~Sensor() {}
+    virtual ~Sensor() {
+#ifdef MAP
+    cout << "Appel au destructeur de <Sensor>" << endl;
+#endif
+    }
     // Mode d'emploi :
     //
     // Contrat :
@@ -115,5 +128,11 @@ protected:
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>
-
+// Fonction ordinaire
+ostream &operator<<(ostream &stream, const Sensor &s)
+{
+    // ostream désigne la classe flux en sortie
+    stream << "Id: " << s.id << " Latitude: " << s.coords.first << " Longitude: " << s.coords.second << " Nombre de mesures: " << s.measureList.size();
+    return stream;
+}
 #endif // Sensor_H

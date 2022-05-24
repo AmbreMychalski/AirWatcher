@@ -33,7 +33,6 @@ int main()
     cout << "-----------------------------------------------------------------------------------------------" << endl;
     // Choix Menu
     int choice = 0;
-    string id = "";
 
     cout << "-----------------------------------Choix du Menu-----------------------------------------------" << endl;
     while (choice > 3 || choice < 1)
@@ -44,6 +43,8 @@ int main()
     switch (choice)
     {
     case 1:
+    {
+        string id = "";
         while (!service.isUserIdValid(id))
         {
             cout << "Quel est votre identifiant ?" << endl;
@@ -64,12 +65,43 @@ int main()
             switch (choice)
             {
             case P_AIR_COIN:
-                service.getUserPoints(id);
+                cout << "Vous avez " << service.getUserPoints(id) << " AirCoins" << endl;
                 break;
             case P_SENSORS:
+            {
+                std::vector<Sensor *> *sensors = service.getUserSensors(id);
+
+                cout << "Vos capteurs sont :" << endl;
+                for (Sensor *s : *sensors)
+                {
+                    cout << s->getId() << endl;
+                }
                 break;
+            }
             case P_SENSOR:
+            {
+                string sensorId;
+                cout << "Veuillez saisir l'id du sensor à sélectionner" << endl;
+                bool found = false;
+                cin >> sensorId;
+
+                std::vector<Sensor *> *sensors = service.getUserSensors(id);
+                for (Sensor *s : *sensors)
+                {
+                    if (s->getId().compare(sensorId))
+                    {
+                        cout << s;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    cout << "L'id du capteur spécifié n'existe pas.";
+                }
                 break;
+            }
             case P_STATUS:
                 break;
             case P_DISCONNECT:
@@ -79,7 +111,10 @@ int main()
         }
         cout << "Déconnexion ..." << endl;
         break;
+    }
     case 2:
+    {
+        string id = "";
         while (!service.isProviderIdValid(id))
         {
             cout << "Quel est votre identifiant ?" << endl;
@@ -105,6 +140,7 @@ int main()
         }
         cout << "Déconnexion ..." << endl;
         break;
+    }
     case 3:
         cout << "Connecté en tant que membre du govuernement." << endl;
         while (choice != P_DISCONNECT)

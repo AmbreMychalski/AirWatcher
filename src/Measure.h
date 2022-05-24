@@ -74,9 +74,16 @@ public:
     //
 
 //-------------------------------------------- Constructeurs - destructeur
-    Measure ( ){}
+    Measure ( ){
+#ifdef MAP
+    cout << "Appel au constructeur de <Measure>" << endl;
+#endif
+    }
 
     Measure ( const Measure & aMeasure ){
+#ifdef MAP
+    cout << "Appel au constructeur par copie de <Measure>" << endl;
+#endif
         this->value = aMeasure.getValue();
         this->date = aMeasure.getDate();
         this->attribute = aMeasure.getAttribute();
@@ -87,6 +94,9 @@ public:
     //
 
     Measure ( double value, Date &date, Attribute &attribute, string sensorId){
+#ifdef MAP
+    cout << "Appel au constructeur de <Measure>" << endl;
+#endif
         this->value=value;
         this->date=date;
         this->attribute = attribute;
@@ -97,7 +107,11 @@ public:
     // Contrat :
     //
 
-    virtual ~Measure ( ){}
+    virtual ~Measure ( ){
+#ifdef MAP
+    cout << "Appel au destructeur par copie de <Measure>" << endl;
+#endif
+    }
     // Mode d'emploi :
     //
     // Contrat :

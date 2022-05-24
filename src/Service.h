@@ -103,13 +103,18 @@ public:
     // Sinon, retourne faux.
 
     Service();
-    ~Service();
+    virtual ~Service();
     // Constructeur
 
     vector<Sensor *> getSensorList();
     vector<Cleaner *> getCleanerList();
     vector<Provider *> getProviderList();
     vector<User *> getUserList();
+
+    /*
+    User *getUserById(string id);
+    Provider *getProviderById(string id);
+    */
 
     void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );

@@ -88,7 +88,19 @@ long double distance(long double lat1, long double long1,
 }
 
 //----------------------------------------------------- Méthodes publiques
+/*
+User *Service::getUserById(string id)
+{
+    return database.getUserById(id);
+}
 
+Provider *Service::getProviderById(string id)
+{
+    return database.getProviderById(id);
+}
+*/
+
+Provider *getProviderById();
 std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
     int i = 0;
@@ -131,7 +143,7 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
                         distance = distance + abs(meanRefTab[i] - meanTab[i]);
                     }
                 }
-                delete measureList;
+                // delete measureList;
             }
         }
         distanceList.push_back(make_pair(sensor, distance));
@@ -197,7 +209,7 @@ int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<
             returnArray[i] = returnArray[i] + measuresMean[i] * ponderation;
         }
 
-        delete measuresList;
+        // delete measuresList;
     }
     return computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
 }
@@ -217,7 +229,7 @@ int Service::getUserPoints(string userId)
 
 std::vector<Sensor *> *Service::getUserSensors(string userId)
 {
-    for (User * user : database.getUserList())
+    for (User *user : database.getUserList())
     {
         if (user->getId().compare(userId))
         {
@@ -258,7 +270,7 @@ void Service::computeMean(const vector<Measure *> measures, double (&returnArray
     double no2 = 0;
     double pm10 = 0;
     double nbO3, nbSo2, nbNo2, nbPm10 = 0;
-    for (Measure * measure : measures)
+    for (Measure *measure : measures)
     {
         if (measure->getAttribute().getId() == "O3")
         {

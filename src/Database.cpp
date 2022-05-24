@@ -158,7 +158,7 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
     getline(stream, value, ';');
     if (lastSensor->getId() != sensorId)
     {
-      int index = 0;
+      long unsigned int index = 0;
       while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
       {
         index++;
@@ -292,6 +292,9 @@ void Database::initialiseUser(string fileName)
 
 Database::Database()
 {
+#ifdef MAP
+    cout << "Appel au constructeur de <Database>" << endl;
+#endif
   this->initialiseDB("../datasets/attributes.csv", "../datasets/measurements.csv", "../datasets/sensors.csv", "../datasets/cleaners.csv", "../datasets/providers.csv", "../datasets/users.csv");
 }
 
