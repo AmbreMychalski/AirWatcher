@@ -62,7 +62,8 @@ public:
     virtual ~Database(){
 #ifdef MAP
     cout << "Appel au destructeur de <Database>" << endl;
-#endif};
+#endif
+    };
     // Mode d'emploi :
     //
     // Contrat :

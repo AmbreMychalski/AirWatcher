@@ -158,7 +158,7 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
     getline(stream, value, ';');
     if (lastSensor->getId() != sensorId)
     {
-      int index = 0;
+      long unsigned int index = 0;
       while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
       {
         index++;

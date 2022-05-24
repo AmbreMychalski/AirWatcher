@@ -110,7 +110,8 @@ public:
     virtual ~Measure ( ){
 #ifdef MAP
     cout << "Appel au destructeur par copie de <Measure>" << endl;
-#endif}
+#endif
+    }
     // Mode d'emploi :
     //
     // Contrat :
