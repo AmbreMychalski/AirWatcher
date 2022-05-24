@@ -69,7 +69,11 @@ public:
         return *this;
     }
 //-------------------------------------------- Constructeurs - destructeur
-    Attribute ( ){}
+    Attribute ( ){
+#ifdef MAP
+    cout << "Appel au constructeur de <Attribute>" << endl;
+#endif
+    }
 
     Attribute ( const Attribute & aAttribute ){
 #ifdef MAP
