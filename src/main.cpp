@@ -5,8 +5,7 @@ using namespace std;
 
 // Dashboard company
 const int C_AIR_CLEANERS = 1;
-const int C_AIR_QUALITY_IMPROVEMENT = 2;
-const int C_DISCONNECT = 3;
+const int C_DISCONNECT = 2;
 
 // Dashboard private individual
 const int P_AIR_COIN = 1;
@@ -20,9 +19,10 @@ const int P_DISCONNECT = 6;
 const int G_MEAN_POINT_TIME_PERIOD = 1;
 const int G_SIMILARITY = 2;
 const int G_SENSORS = 3;
-const int G_AIR_CLEANERS = 4;
-const int G_AIR_CLEANER = 5;
-const int G_DISCONNECT = 6;
+const int G_SENSOR = 4;
+const int G_AIR_CLEANERS = 5;
+const int G_AIR_CLEANER = 6;
+const int G_DISCONNECT = 7;
 
 int main()
 {
@@ -44,35 +44,38 @@ int main()
     {
     case 1:
     {
-        string id = "";
-        while (!service.isUserIdValid(id))
+        string id;
+        cout << "Quel est votre identifiant ?" << endl;
+        cin >> id;
+        User *user;
+        while ((user = service.getUserById(id)) == nullptr)
         {
-            cout << "Quel est votre identifiant ?" << endl;
+            cout << "Identifiant incorrect. Quel est votre identifiant ?" << endl;
             cin >> id;
         }
 
         cout << "Connecté en tant que citoyen." << endl;
         while (choice != P_DISCONNECT)
         {
+            cout << endl;
             cout << P_AIR_COIN << ") Voir mes points" << endl;
             cout << P_SENSORS << ") Voir mes capteurs" << endl;
-            cout << P_SENSOR << ") Selectionner un capteur" << endl;
+            cout << P_SENSOR << ") Sélectionner un capteur" << endl;
             cout << P_MEASURES << ") Voir mes mesures" << endl;
             cout << P_STATUS << ") Voir mon statut" << endl;
             cout << P_DISCONNECT << ") Me déconnecter" << endl;
+            cout << endl;
 
             cin >> choice;
             switch (choice)
             {
             case P_AIR_COIN:
-                cout << "Vous avez " << service.getUserPoints(id) << " AirCoins" << endl;
+                cout << "Vous avez " << user->getNbPoints() << " AirCoins" << endl;
                 break;
             case P_SENSORS:
             {
-                std::vector<Sensor *> *sensors = service.getUserSensors(id);
-
-                cout << "Vos capteurs sont :" << endl;
-                for (Sensor *s : *sensors)
+                cout << "Vous avez " << user->getSensorList()->size() << " capteur(s) :" << endl;
+                for (Sensor *s : *user->getSensorList())
                 {
                     cout << s->getId() << endl;
                 }
@@ -81,16 +84,15 @@ int main()
             case P_SENSOR:
             {
                 string sensorId;
-                cout << "Veuillez saisir l'id du sensor à sélectionner" << endl;
+                cout << "Veuillez saisir l'id du capteur à sélectionner" << endl;
                 bool found = false;
                 cin >> sensorId;
 
-                std::vector<Sensor *> *sensors = service.getUserSensors(id);
-                for (Sensor *s : *sensors)
+                for (Sensor *s : *user->getSensorList())
                 {
-                    if (s->getId().compare(sensorId))
+                    if (s->getId() == sensorId)
                     {
-                        cout << s;
+                        cout << *s << endl;
                         found = true;
                         break;
                     }
@@ -98,12 +100,53 @@ int main()
 
                 if (!found)
                 {
-                    cout << "L'id du capteur spécifié n'existe pas.";
+                    cout << "Le capteur spécifié n'existe pas.";
                 }
                 break;
             }
-            case P_STATUS:
+            case P_MEASURES:
+                for (Sensor *s : *user->getSensorList())
+                {
+                    cout << "Capteur " << s->getId() << " :" << endl;
+                    for (Measure *m : s->getMeasureList())
+                    {
+                        cout << *m << endl;
+                    }
+                    cout << endl;
+                }
                 break;
+            case P_STATUS:
+            {
+                vector<Sensor *> unreliableSensors = vector<Sensor *>();
+                for (Sensor *s : *user->getSensorList())
+                {
+                    if (!s->getReliable())
+                    {
+                        unreliableSensors.push_back(s);
+                    }
+                }
+
+                if (unreliableSensors.empty())
+                {
+                    cout << "Tous vos capteurs sont valides.";
+                }
+                else
+                {
+                    if (unreliableSensors.size() == 1)
+                    {
+                        cout << "1 de vos capteur est invalide :" << endl;
+                    }
+                    else
+                    {
+                        cout << unreliableSensors.size() << " de vos capteurs sont invalides :" << endl;
+                    }
+                    for (Sensor *s : unreliableSensors)
+                    {
+                        cout << s << endl;
+                    }
+                }
+                break;
+            }
             case P_DISCONNECT:
                 // EMPTY CASE
                 break;
@@ -115,7 +158,8 @@ int main()
     case 2:
     {
         string id = "";
-        while (!service.isProviderIdValid(id))
+        Provider *provider;
+        while ((provider = service.getProviderById(id)) == nullptr)
         {
             cout << "Quel est votre identifiant ?" << endl;
             cin >> id;
@@ -123,15 +167,21 @@ int main()
         cout << "Connecté en tant qu'entreprise." << endl;
         while (choice != C_DISCONNECT)
         {
-            cout << C_AIR_CLEANERS << ") Voir la liste d'Air Cleaner" << endl;
-            cout << C_AIR_QUALITY_IMPROVEMENT << ") Voir l'amélioration de la qualité de l'air" << endl;
+            cout << endl;
+            cout << C_AIR_CLEANERS << ") Voir la liste d'Air Cleaner(s)" << endl;
+            // cout << C_AIR_QUALITY_IMPROVEMENT << ") Voir l'amélioration de la qualité de l'air" << endl;
             cout << C_DISCONNECT << ") Me déconnecter" << endl;
+            cout << endl;
+
             cin >> choice;
             switch (choice)
             {
             case C_AIR_CLEANERS:
-                break;
-            case C_AIR_QUALITY_IMPROVEMENT:
+                cout << "Vous avez " << provider->getCleanerList()->size() << " Air Cleaner(s) :" << endl;
+                for (Cleaner *c : *provider->getCleanerList())
+                {
+                    cout << *c << endl;
+                }
                 break;
             case C_DISCONNECT:
                 // EMPTY CASE
@@ -142,22 +192,151 @@ int main()
         break;
     }
     case 3:
-        cout << "Connecté en tant que membre du govuernement." << endl;
-        while (choice != P_DISCONNECT)
+        cout << "Connecté en tant que membre du gouvernement." << endl;
+        while (choice != G_DISCONNECT)
         {
+            cout << endl;
+            cout << G_MEAN_POINT_TIME_PERIOD << ") Calculer l'indice ATMO Moyen en un point donné sur une période donnée" << endl;
+            cout << G_SIMILARITY << ") Calculer le pourcentage de similarité d'un capteur avec ceux qui l'entoure" << endl;
+            cout << G_SENSORS << ") Afficher les capteurs" << endl;
+            cout << G_SENSOR << ") Afficher les mesures d'un capteur" << endl;
+            cout << G_AIR_CLEANERS << ") Afficher les Air Cleaner(s)" << endl;
+            cout << G_AIR_CLEANER << ") Afficher un Air Cleaner" << endl;
+            cout << G_DISCONNECT << ") Me déconnecter" << endl;
+            cout << endl;
+
             cin >> choice;
             switch (choice)
             {
             case G_MEAN_POINT_TIME_PERIOD:
+            {
+                Date startDate;
+                Date endDate;
+                pair<double, double> coords;
+                double returnArray[NB_ATTRIBUTES];
+                cout << "Calcul de l'index ATMO Moyen." << endl;
+
+                cout << "Veuillez saisir la date de départ (dd/MM/YYYY hh:mm:ss) :" << endl;
+                cin >> startDate;
+
+                cout << "Veuillez saisir la date de fin (dd/MM/YYYY hh:mm:ss) :" << endl;
+                cin >> startDate;
+
+                cout << "Veuillez saisir la latitude du point d'analyse :" << endl;
+                cin >> coords.first;
+
+                cout << "Veuillez saisir la longitude du point d'analyse :" << endl;
+                cin >> coords.second;
+
+                int atmoIndex = service.computeMeanPointTimePeriod(startDate, endDate, coords, returnArray);
+                cout << "L'index ATMO moyen est " << atmoIndex << endl;
                 break;
+            }
             case G_SIMILARITY:
+            {
+                cout << "Calcul de la similarité." << endl;
+                cout << "Veuillez saisir l'identifiant du capteur sur lequel se base le score de similarité :" << endl;
+
+                string sensorId;
+                bool found = false;
+                cin >> sensorId;
+
+                for (Sensor *s : service.getSensorList())
+                {
+                    if (s->getId() == sensorId)
+                    {
+                        cout << "Capteur sélectionné : " << s;
+
+                        Date startDate;
+                        Date endDate;
+                        cout << "Veuillez saisir la date de départ (dd/MM/YYYY hh:mm:ss) :" << endl;
+                        cin >> startDate;
+
+                        cout << "Veuillez saisir la date de fin (dd/MM/YYYY hh:mm:ss) :" << endl;
+                        cin >> startDate;
+
+                        std::vector<std::pair<Sensor *, double>> *similarity = service.computeSimilarity(sensorId, service.getSensorList(), startDate, endDate);
+                        double similarityMean = 0;
+                        for (pair<Sensor *, double> elem : *similarity)
+                        {
+                            similarityMean += elem.second;
+                        }
+                        similarityMean /= similarity->size();
+                        cout << "Score de similarité moyen : " << similarityMean << " %" << endl;
+
+                        similarity = service.computeSimilarity(sensorId, *service.filterNeighbours(s->getCoords()), startDate, endDate);
+                        similarityMean = 0;
+                        for (pair<Sensor *, double> elem : *similarity)
+                        {
+                            similarityMean += elem.second;
+                        }
+                        similarityMean /= similarity->size();
+                        cout << "Score de similarité moyen pour les capteurs proches : " << similarityMean << " %" << endl;
+
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    cout << "Le capteur spécifié n'existe pas.";
+                }
                 break;
+            }
             case G_SENSORS:
+                cout << "Liste des capteurs : " << endl;
+                for (Sensor *s : service.getSensorList())
+                {
+                    cout << *s << endl;
+                }
                 break;
+            case G_SENSOR:
+            {
+                string sensorId;
+                cout << "Veuillez saisir l'id du capteur à sélectionner" << endl;
+                cin >> sensorId;
+                Sensor *sensor = service.getSensorById(sensorId);
+
+                if (sensor == nullptr)
+                {
+                    cout << "Le capteur spécifié n'existe pas.";
+                }
+                else
+                {
+                    cout << sensor << endl;
+                    cout << "Mesures du capteur :" << endl;
+                    for (Measure *m : sensor->getMeasureList())
+                    {
+                        cout << *m << endl;
+                    }
+                }
+                break;
+            }
             case G_AIR_CLEANERS:
+                cout << "Liste des Air Cleaners : " << endl;
+                for (Cleaner *c : service.getCleanerList())
+                {
+                    cout << *c << endl;
+                }
                 break;
             case G_AIR_CLEANER:
+            {
+
+                string cleanerId;
+                cout << "Veuillez saisir l'id du Air Cleaner à sélectionner" << endl;
+                cin >> cleanerId;
+                Cleaner *cleaner = service.getCleanerById(cleanerId);
+                if (cleaner == nullptr)
+                {
+                    cout << "Le capteur spécifié n'existe pas.";
+                }
+                else
+                {
+                    cout << *cleaner;
+                }
                 break;
+            }
             case G_DISCONNECT:
                 // EMPTY CASE
                 break;
@@ -167,6 +346,13 @@ int main()
         break;
     }
 
-    cout << "-----------------------------------------------------------------------------------------------" << endl;
-    cout << "Merci d'avoir utilisé AirWatcher, Votre compagnon pour une qualité de l'air plus saine !" << endl;
+    cout << endl
+         << "-----------------------------------------------------------------------------------------------" << endl
+         << endl
+         << "Merci d'avoir utilisé AirWatcher,"
+         << endl
+         << "Votre compagnon pour une qualité de l'air plus saine !"
+         << endl
+         << endl
+         << endl;
 }

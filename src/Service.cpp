@@ -88,7 +88,16 @@ long double distance(long double lat1, long double long1,
 }
 
 //----------------------------------------------------- Méthodes publiques
-/*
+Sensor *Service::getSensorById(string id)
+{
+    return database.getSensorById(id);
+}
+
+Cleaner *Service::getCleanerById(string id)
+{
+    return database.getCleanerById(id);
+}
+
 User *Service::getUserById(string id)
 {
     return database.getUserById(id);
@@ -98,9 +107,6 @@ Provider *Service::getProviderById(string id)
 {
     return database.getProviderById(id);
 }
-*/
-
-Provider *getProviderById();
 
 std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
@@ -112,14 +118,18 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     }
     if (i == LENGTH)
     {
-        return NULL;
+        return nullptr;
     }
-    cout<<"la :2 \n";
-    std::vector<Measure *> measureListRef = database.getSensorList()[i]->getMeasureList();
+    return Service::computeSimilarity(database.getSensorList()[i], sensorList, startDate, endDate);
+}
+std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
+{
+    // cout << "la :2 \n";
+    std::vector<Measure *> measureListRef = sensor->getMeasureList();
     double meanRefTab[NB_ATTRIBUTES];
     double meanTab[NB_ATTRIBUTES];
     computeMean(measureListRef, meanRefTab);
-    cout<<"la :3 \n";
+    // cout << "la :3 \n";
 
     std::vector<std::pair<Sensor *, double>> distanceList;
     std::vector<std::pair<Sensor *, double>> *similarityList = new std::vector<std::pair<Sensor *, double>>;
@@ -128,16 +138,16 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     {
         double distance = 0;
         // Si le capteur est bien distinct du capteur de référence
-        if (sensorId != sensor->getId())
+        if (sensor->getId() != sensor->getId())
         {
-            std::vector<Measure *>* measureList = filterByPeriod(sensor->getId(), startDate, endDate);
+            std::vector<Measure *> *measureList = filterByPeriod(sensor->getId(), startDate, endDate);
             if (!measureList->empty())
             {
                 computeMean(*measureList, meanTab);
 
                 for (int i = 0; i < NB_ATTRIBUTES; ++i)
-                {   
-                   
+                {
+
                     /// Incrémenter la distance totale par la distance (au carré)
                     // entre les valeurs moyenne smesurées par ce capteur et le capteur de
                     // référence, à condition que ces valeurs existent bien
@@ -145,7 +155,7 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
                     distance = distance + abs(meanRefTab[i] - meanTab[i]);
                 }
                 // delete measureList;
-                cout<<endl;
+                cout << endl;
             }
         }
         distanceList.push_back(make_pair(sensor, distance));
@@ -155,15 +165,13 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     if (distanceMax != 0)
     {
         // Normaliser les distances entre 0 et 1
-        int i=0;
+        int i = 0;
         for (pair<Sensor *, double> elemDistance : distanceList)
-        { 
+        {
             distanceList[i].second = elemDistance.second / distanceMax;
-            cout<<"oui :"<<elemDistance.second<<"\n";
+            cout << "oui :" << elemDistance.second << "\n";
             i++;
         }
-
-        
     }
     for (pair<Sensor *, double> elemNormalizedDistance : distanceList)
     {
@@ -346,7 +354,7 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
 vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
     Sensor *sensor = database.getSensorById(sensorId);
-    cout<<"laaaa "<<sensor->getId()<<endl;
+    cout << "laaaa " << sensor->getId() << endl;
     if (sensor == nullptr)
     {
         return nullptr;
@@ -405,7 +413,7 @@ Service::Service()
 #ifdef MAP
     cout << "Appel au constructeur de <Service>" << endl;
 #endif
-    //database = Database();
+    // database = Database();
 } //----- Fin de Service
 
 Service::~Service()

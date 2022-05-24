@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Date> (fichier Date.h) ----------------
-#if ! defined ( DATE_H )
+#if !defined(DATE_H)
 #define DATE_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -24,82 +24,69 @@
 
 class Date
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    int getYear () const
+    //----------------------------------------------------- Méthodes publiques
+    friend ostream &operator<<(ostream &stream, const Date &d);
+
+    friend istream &operator>>(istream &stream, Date &d);
+
+    int getYear() const
     {
         return year;
     }
-    
-    int getMonth () const
+
+    int getMonth() const
     {
         return month;
     }
-    
-    int getDay () const
+
+    int getDay() const
     {
         return day;
     }
-    
-    int getHour () const
+
+    int getHour() const
     {
         return hour;
     }
-    
-    int getMinute () const
+
+    int getMinute() const
     {
         return minute;
     }
-    
-    int getSecond () const
+
+    int getSecond() const
     {
         return second;
     }
 
+    //------------------------------------------------- Surcharge d'opérateurs
+    bool operator==(const Date &date);
+    bool operator<(const Date &date);
+    bool operator<=(const Date &date);
+    bool operator!=(const Date &date);
+    bool operator>(const Date &date);
+    bool operator>=(const Date &date);
 
-//------------------------------------------------- Surcharge d'opérateurs
-    bool operator == ( const Date & date );
-    bool operator < ( const Date & date );
-    bool operator <= ( const Date & date );
-    bool operator != ( const Date & date );
-    bool operator > ( const Date & date );
-    bool operator >= ( const Date & date );
+    //-------------------------------------------- Constructeurs - destructeur
 
-//-------------------------------------------- Constructeurs - destructeur
+    Date(int y, int M, int d, int h, int m, int s);
 
-    Date ( int y, int M, int d, int h, int m, int s ):
-    year(y), month(M), day(d), hour(h), minute(m), second(s)
-    {
-#ifdef MAP
-    cout << "Appel au constructeur de <Date>" << endl;
-#endif
-    }
-    
-    Date ()
-    {
-#ifdef MAP
-    cout << "Appel au constructeur de <Date>" << endl;
-#endif
-    }
+    Date();
 
-    virtual ~Date ( )
-    {
-#ifdef MAP
-    cout << "Appel au destructeur de <Date>" << endl;
-#endif
-    }
+    virtual ~Date();
 
-//------------------------------------------------------------------ PRIVE
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     int year;
     int month;
-	int day;
+    int day;
     int hour;
     int minute;
     int second;
@@ -108,4 +95,3 @@ protected:
 //-------------------------------- Autres définitions dépendantes de <Date>
 
 #endif // DATE_H
-

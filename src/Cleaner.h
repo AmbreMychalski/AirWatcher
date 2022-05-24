@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Cleaner> (fichier Cleaner.h) ----------------
-#if ! defined ( CLEANER_H )
+#if !defined(CLEANER_H)
 #define CLEANER_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -26,65 +26,39 @@ using namespace std;
 
 class Cleaner
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    string getId () const
-    {
-        return id;
-    }
+    //----------------------------------------------------- Méthodes publiques
+    friend ostream &operator<<(ostream &stream, const Cleaner &c);
 
-    pair<double, double> getCoords () const
-    {
-        return coords;
-    }
+    string getId() const;
 
-    Date getStartDate () const
-    {
-        return startDate;
-    }
+    pair<double, double> getCoords() const;
 
-    Date getEndDate () const
-    {
-        return endDate;
-    }
+    Date getStartDate() const;
 
-    void setEndDate ( Date date)
-    {
-        endDate = date;
-    }
+    Date getEndDate() const;
 
-//-------------------------------------------- Constructeurs - destructeur
-    Cleaner (string id, pair<double, double> coords, Date startDate, Date endDate):
-    id( id ), coords( coords ), startDate( startDate ), endDate( endDate)
-    {
-#ifdef MAP
-    cout << "Appel au constructeur de <Cleaner>" << endl;
-#endif
-    }
+    void setEndDate(Date date);
 
-    virtual ~Cleaner ( )
-    {
-#ifdef MAP
-    cout << "Appel au destructeur de <Cleaner>" << endl;
-#endif
-    }
+    //-------------------------------------------- Constructeurs - destructeur
+    Cleaner(string id, pair<double, double> coords, Date startDate, Date endDate);
 
-//------------------------------------------------------------------ PRIVE
+    virtual ~Cleaner();
+
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     string id;
     pair<double, double> coords;
     Date startDate;
     Date endDate;
-
 };
 
 //-------------------------------- Autres définitions dépendantes de <Cleaner>
 
 #endif // CLEANER_H
-

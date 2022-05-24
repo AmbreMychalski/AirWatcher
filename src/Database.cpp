@@ -42,7 +42,7 @@ Cleaner *Database::getCleanerById(string cleanerId)
 {
   for (Cleaner *cleaner : cleanerList)
   {
-    if (cleaner->getId().compare(cleanerId))
+    if (cleaner->getId() == cleanerId)
     {
       return cleaner;
     }
@@ -54,7 +54,7 @@ Sensor *Database::getSensorById(string sensorId)
 {
   for (Sensor *sensor : sensorList)
   {
-    if (sensor->getId().compare(sensorId))
+    if (sensor->getId() == sensorId)
     {
       return sensor;
     }
@@ -66,7 +66,7 @@ User *Database::getUserById(string userId)
 {
   for (User *user : userList)
   {
-    if (user->getId().compare(userId))
+    if (user->getId() == userId)
     {
       return user;
     }
@@ -78,7 +78,7 @@ Provider *Database::getProviderById(string providerId)
 {
   for (Provider *provider : providerList)
   {
-    if (provider->getId().compare(providerId))
+    if (provider->getId() == providerId)
     {
       return provider;
     }
@@ -207,12 +207,13 @@ void Database::initialiseCleaner(string fileName)
   stream.open(fileName.c_str());
 
   getline(stream, id, ';');
+
   while (id.size() != 0)
   {
     getline(stream, lat, ';');
     getline(stream, lon, ';');
     coords = make_pair(stod(lat), stod(lon));
-    for (int i; i < 2; i++)
+    for (int i = 0; i < 2; ++i)
     {
       getline(stream, year, '-');
       getline(stream, month, '-');
@@ -250,7 +251,7 @@ void Database::initialiseProvider(string fileName)
     getline(stream, cleanerId, ';');
 
     providerList.push_back(new Provider(id));
-    for (Cleaner * c : cleanerList)
+    for (Cleaner *c : cleanerList)
     {
       if (c->getId() == cleanerId)
       {
@@ -293,7 +294,7 @@ void Database::initialiseUser(string fileName)
 Database::Database()
 {
 #ifdef MAP
-    cout << "Appel au constructeur de <Database>" << endl;
+  cout << "Appel au constructeur de <Database>" << endl;
 #endif
   this->initialiseDB("./datasets/attributes.csv", "./datasets/measurements.csv", "./datasets/sensors.csv", "./datasets/cleaners.csv", "./datasets/providers.csv", "./datasets/users.csv");
 }

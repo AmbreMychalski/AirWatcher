@@ -44,6 +44,7 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
+    std::vector<std::pair<Sensor *, double>> *computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
     std::vector<std::pair<Sensor *, double>> *computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
@@ -111,10 +112,13 @@ public:
     vector<Provider *> getProviderList();
     vector<User *> getUserList();
 
-    /*
     User *getUserById(string id);
+
     Provider *getProviderById(string id);
-    */
+
+    Sensor *getSensorById(string id);
+
+    Cleaner *getCleanerById(string id);
 
     void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );

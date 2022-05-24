@@ -36,84 +36,40 @@ public:
     //----------------------------------------------------- Méthodes publiques
     
 
-    void setId(string id)
-    {
-        this->id = id;
-    }
+    void setId(string id);
 
-    void setReliable(bool reliable)
-    {
-        this->reliable = reliable;
-    }
+    void setReliable(bool reliable);
 
-    void setCoords(double x, double y)
-    {
-        this->coords = make_pair(x, y);
-    }
+    void setCoords(double x, double y);
 
-    void addMeasure(Measure *measure)
-    {
-        this->measureList.push_back(measure);
-    }
+    void addMeasure(Measure *measure);
 
-    string getId() const
-    {
-        return this->id;
-    }
+    string getId() const;
 
-    bool getReliable() const
-    {
-        return this->reliable;
-    }
+    bool getReliable() const;
 
-    pair<double, double> getCoords() const
-    {
-        return this->coords;
-    }
+    pair<double, double> getCoords() const;
 
-    vector<Measure *> getMeasureList()
-    {
-        return measureList;
-    }
+    vector<Measure *> getMeasureList() const;
+
+    vector<Measure *> getMeasureList();
 
     //-------------------------------------------- Constructeurs - destructeur
-    Sensor() {
-#ifdef MAP
-    cout << "Appel au constructeur de <Sensor>" << endl;
-#endif
-    }
+    Sensor();
 
-    Sensor(string id, bool reliable, double x, double y)
-    {
-#ifdef MAP
-    cout << "Appel au constructeur de <Sensor>" << endl;
-#endif
-        this->id = id;
-        this->reliable = reliable;
-        // pair <double, double> coordonnees=make_pair(x, y);
-        this->coords = make_pair(x, y);
-    }
+    Sensor(string id, bool reliable, double x, double y);
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    virtual ~Sensor() {
-#ifdef MAP
-    cout << "Appel au destructeur de <Sensor>" << endl;
-#endif
-    }
+    virtual ~Sensor();
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    bool operator<(const Sensor &s) const
-    // Algorithme :
-    //
-    {
-        return (this->id < s.getId());
-    }
+    bool operator<(const Sensor &s) const;
 
     //------------------------------------------------------------------ PRIVE
 
@@ -128,5 +84,4 @@ protected:
 };
 
 //-------------------------------- Autres définitions dépendantes de <Sensor>
-
 #endif // Sensor_H

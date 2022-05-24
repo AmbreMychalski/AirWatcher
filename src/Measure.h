@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <Measure> (fichier Measure.h) ----------------
-#if ! defined ( Measure_H )
+#if !defined(Measure_H)
 #define Measure_H
 #include "Attribute.h"
 #include "Date.h"
@@ -15,13 +15,16 @@
 //
 //------------------------------------------------------------------------
 
-class Measure 
+class Measure
 {
-//----------------------------------------------------------------- PUBLIC
+    //----------------------------------------------------------------- PUBLIC
 
 public:
-//----------------------------------------------------- Méthodes publiques
-    void setValue ( double val ){
+    //----------------------------------------------------- Méthodes publiques
+    friend ostream &operator<<(ostream &stream, const Measure &measure);
+
+    void setValue(double val)
+    {
         this->value = val;
     }
     // Mode d'emploi :
@@ -29,7 +32,8 @@ public:
     // Contrat :
     //
 
-    void setDate ( Date date ){
+    void setDate(Date date)
+    {
         this->date = date;
     }
     // Mode d'emploi :
@@ -37,7 +41,8 @@ public:
     // Contrat :
     //
 
-    void setAttribute ( Attribute &attr ){
+    void setAttribute(Attribute &attr)
+    {
         this->attribute = attr;
     }
     // Mode d'emploi :
@@ -45,7 +50,8 @@ public:
     // Contrat :
     //
 
-    double getValue ( )const {
+    double getValue() const
+    {
         return this->value;
     }
     // Mode d'emploi :
@@ -53,11 +59,13 @@ public:
     // Contrat :
     //
 
-    string getSensorId ( )const {
+    string getSensorId() const
+    {
         return this->sensorId;
     }
 
-    Date getDate ( )const{
+    Date getDate() const
+    {
         return this->date;
     }
     // Mode d'emploi :
@@ -65,7 +73,8 @@ public:
     // Contrat :
     //
 
-    Attribute getAttribute ( )const{
+    Attribute getAttribute() const
+    {
         return this->attribute;
     }
     // Mode d'emploi :
@@ -73,16 +82,18 @@ public:
     // Contrat :
     //
 
-//-------------------------------------------- Constructeurs - destructeur
-    Measure ( ){
+    //-------------------------------------------- Constructeurs - destructeur
+    Measure()
+    {
 #ifdef MAP
-    cout << "Appel au constructeur de <Measure>" << endl;
+        cout << "Appel au constructeur de <Measure>" << endl;
 #endif
     }
 
-    Measure ( const Measure & aMeasure ){
+    Measure(const Measure &aMeasure)
+    {
 #ifdef MAP
-    cout << "Appel au constructeur par copie de <Measure>" << endl;
+        cout << "Appel au constructeur par copie de <Measure>" << endl;
 #endif
         this->value = aMeasure.getValue();
         this->date = aMeasure.getDate();
@@ -93,12 +104,13 @@ public:
     // Contrat :
     //
 
-    Measure ( double value, Date &date, Attribute &attribute, string sensorId){
+    Measure(double value, Date &date, Attribute &attribute, string sensorId)
+    {
 #ifdef MAP
-    cout << "Appel au constructeur de <Measure>" << endl;
+        cout << "Appel au constructeur de <Measure>" << endl;
 #endif
-        this->value=value;
-        this->date=date;
+        this->value = value;
+        this->date = date;
         this->attribute = attribute;
         this->sensorId = sensorId;
     }
@@ -107,9 +119,10 @@ public:
     // Contrat :
     //
 
-    virtual ~Measure ( ){
+    virtual ~Measure()
+    {
 #ifdef MAP
-    cout << "Appel au destructeur par copie de <Measure>" << endl;
+        cout << "Appel au destructeur par copie de <Measure>" << endl;
 #endif
     }
     // Mode d'emploi :
@@ -117,12 +130,12 @@ public:
     // Contrat :
     //
 
-//------------------------------------------------------------------ PRIVE
+    //------------------------------------------------------------------ PRIVE
 
 protected:
-//----------------------------------------------------- Méthodes protégées
+    //----------------------------------------------------- Méthodes protégées
 
-//----------------------------------------------------- Attributs protégés
+    //----------------------------------------------------- Attributs protégés
     double value;
     Date date;
     Attribute attribute;
@@ -132,4 +145,3 @@ protected:
 //-------------------------------- Autres définitions dépendantes de <Xxx>
 
 #endif // Measure_H
-
