@@ -104,12 +104,12 @@ public:
     Service();
     // Constructeur
 
-    vector<Sensor> getSensorList();
-    vector<Cleaner> getCleanerList();
-    vector<Provider> getProviderList();
-    vector<User> getUserList();
+    vector<Sensor *> getSensorList();
+    vector<Cleaner *> getCleanerList();
+    vector<Provider *> getProviderList();
+    vector<User *> getUserList();
 
-    void computeMean(vector<Measure> measures, double (&returnArray)[NB_ATTRIBUTES]);
+    void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //

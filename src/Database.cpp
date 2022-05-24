@@ -165,7 +165,7 @@ void Database::initialiseMesure(string fileName, vector<Attribute> attributeList
       }
       lastSensor = sensorList.at(index);
     }
-    lastSensor->addMeasure(Measure(stod(value), date, att, sensorId));
+    lastSensor->addMeasure(new Measure(stod(value), date, att, sensorId));
     getline(stream, temp, '\n');
     getline(stream, year, '-');
   }

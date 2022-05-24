@@ -10,47 +10,47 @@ int main()
 {
     Service s = Service();
 
-    vector<Sensor> sensorsList = s.getSensorList();
+    vector<Sensor *> sensorsList = s.getSensorList();
     cout << "sensors : \n";
-    for (Sensor sensors : sensorsList)
+    for (Sensor *sensors : sensorsList)
     {
-        cout << sensors.getId() << "\n";
+        cout << sensors->getId() << "\n";
     }
 
-    vector<Cleaner> cleanersList = s.getCleanerList();
+    vector<Cleaner *> cleanersList = s.getCleanerList();
     cout << "cleaners : \n";
-    for (Cleaner cleaner : cleanersList)
+    for (Cleaner *cleaner : cleanersList)
     {
-        cout << cleaner.getId() << "\n";
+        cout << cleaner->getId() << "\n";
     }
 
-    vector<Provider> providersList = s.getProviderList();
+    vector<Provider *> providersList = s.getProviderList();
     cout << "providers : \n";
-    for (Provider provider : providersList)
+    for (Provider * provider : providersList)
     {
-        cout << provider.getId() << "\n";
+        cout << provider->getId() << "\n";
     }
 
-    vector<User> usersList = s.getUserList();
+    vector<User *> usersList = s.getUserList();
     cout << "users : \n";
-    for (User user : usersList)
+    for (User *user : usersList)
     {
-        cout << user.getId() << "\n";
+        cout << user->getId() << "\n";
     }
 
     Date d1(2019, 1, 3, 0, 0, 0);
     Date d2(2019, 1, 7, 0, 0, 0);
-    vector<Measure> *listM = s.filterByPeriod("Sensor1", d1, d2);
-    for (Measure m : *listM)
+    vector<Measure *> *listM = s.filterByPeriod("Sensor1", d1, d2);
+    for (Measure * m : *listM)
     {
-        cout << m.getAttribute().getId() << " :" << m.getValue() << "\n";
+        cout << m->getAttribute().getId() << " :" << m->getValue() << "\n";
     }
 
     pair<double, double> coords = make_pair(44.4, 3.2);
-    vector<Sensor> *listS = s.filterNeighbours(coords);
-    for (Sensor s : *listS)
+    vector<Sensor *> *listS = s.filterNeighbours(coords);
+    for (Sensor * s : *listS)
     {
-        cout << s.getId() << "\n";
+        cout << s->getId() << "\n";
     }
 
     double res[4]{0};
