@@ -114,11 +114,12 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     {
         return NULL;
     }
-
+    cout<<"la :2 \n";
     std::vector<Measure *> measureListRef = database.getSensorList()[i]->getMeasureList();
     double meanRefTab[NB_ATTRIBUTES];
     double meanTab[NB_ATTRIBUTES];
     computeMean(measureListRef, meanRefTab);
+    cout<<"la :3 \n";
 
     std::vector<std::pair<Sensor *, double>> distanceList;
     std::vector<std::pair<Sensor *, double>> *similarityList = new std::vector<std::pair<Sensor *, double>>;
@@ -130,14 +131,13 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
         if (sensorId != sensor->getId())
         {
             std::vector<Measure *>* measureList = filterByPeriod(sensor->getId(), startDate, endDate);
-            cout<<sensor->getId()<<" "<<(measureList->front()->getValue());
             if (!measureList->empty())
             {
                 computeMean(*measureList, meanTab);
 
                 for (int i = 0; i < NB_ATTRIBUTES; ++i)
                 {   
-                    cout<<meanTab[i]<<" ;";
+                   
                     /// Incrémenter la distance totale par la distance (au carré)
                     // entre les valeurs moyenne smesurées par ce capteur et le capteur de
                     // référence, à condition que ces valeurs existent bien
@@ -151,15 +151,19 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
         distanceList.push_back(make_pair(sensor, distance));
         distanceMax = max(distance, distanceMax);
     }
-
     // Si tous les capteurs ne sont pas exactement identiques
     if (distanceMax != 0)
     {
         // Normaliser les distances entre 0 et 1
+        int i=0;
         for (pair<Sensor *, double> elemDistance : distanceList)
-        {
-            elemDistance.second = elemDistance.second / distanceMax;
+        { 
+            distanceList[i].second = elemDistance.second / distanceMax;
+            cout<<"oui :"<<elemDistance.second<<"\n";
+            i++;
         }
+
+        
     }
     for (pair<Sensor *, double> elemNormalizedDistance : distanceList)
     {
