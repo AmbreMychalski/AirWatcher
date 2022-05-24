@@ -59,7 +59,10 @@ public:
     // Contrat :
     //
 
-    virtual ~Database(){};
+    virtual ~Database(){
+#ifdef MAP
+    cout << "Appel au destructeur de <Database>" << endl;
+#endif};
     // Mode d'emploi :
     //
     // Contrat :

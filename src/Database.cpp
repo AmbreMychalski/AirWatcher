@@ -292,6 +292,9 @@ void Database::initialiseUser(string fileName)
 
 Database::Database()
 {
+#ifdef MAP
+    cout << "Appel au constructeur de <Database>" << endl;
+#endif
   this->initialiseDB("../datasets/attributes.csv", "../datasets/measurements.csv", "../datasets/sensors.csv", "../datasets/cleaners.csv", "../datasets/providers.csv", "../datasets/users.csv");
 }
 
