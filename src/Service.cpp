@@ -17,7 +17,6 @@ using namespace std;
 #include <cmath>
 #include <algorithm> // std::sort
 #include <tgmath.h>
-#include "Provider.h"
 //------------------------------------------------------ Include personnel
 #include "Service.h"
 
@@ -159,7 +158,7 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     return similarityList;
 }
 
-double Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES])
+int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES])
 {
     std::vector<Sensor *> *listSensorNeighbours = filterNeighbours(center);
     double distanceSum = 0;

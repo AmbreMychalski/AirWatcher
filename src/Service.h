@@ -21,6 +21,7 @@
 #include "Cleaner.h"
 #include "Sensor.h"
 #include "Date.h"
+#include "Provider.h"
 
 using namespace std;
 
@@ -51,7 +52,7 @@ public:
     // Renvoie la liste des capteurs de sensorList associés à leur similarité
     // par rapport au capteur de référence, sur une période donnée
 
-    double computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double radius, double (&returnArray)[NB_ATTRIBUTES]);
+    int computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES]);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
