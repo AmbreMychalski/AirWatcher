@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Service.h"
+#include <chrono>
 using namespace std;
 
 // Dashboard company
@@ -23,6 +24,8 @@ const int G_SENSOR = 4;
 const int G_AIR_CLEANERS = 5;
 const int G_AIR_CLEANER = 6;
 const int G_DISCONNECT = 7;
+
+
 
 int main()
 {
@@ -228,8 +231,15 @@ int main()
                 cout << "Veuillez saisir la longitude du point d'analyse :" << endl;
                 cin >> coords.second;
 
+                auto start = std::chrono::high_resolution_clock::now();
                 int atmoIndex = service.computeMeanPointTimePeriod(startDate, endDate, coords, returnArray);
+                auto end = std::chrono::high_resolution_clock::now();
+
+                std::chrono::duration<double, std::milli> float_ms = end - start;
+
                 cout << "L'index ATMO moyen est " << atmoIndex << endl;
+                cout << "Temps d'exécution de la fonction computeMeanPointTimePeriod : " << float_ms.count() << " milliseconds" << endl;
+                
                 break;
             }
             case G_SIMILARITY:
@@ -245,7 +255,7 @@ int main()
                 {
                     if (s->getId() == sensorId)
                     {
-                        cout << "Capteur sélectionné : " << s;
+                        cout << "Capteur sélectionné : " << s->getId()<<endl;
 
                         Date startDate;
                         Date endDate;
@@ -255,7 +265,12 @@ int main()
                         cout << "Veuillez saisir la date de fin (dd/MM/YYYY hh:mm:ss) :" << endl;
                         cin >> startDate;
 
+                        auto start = std::chrono::high_resolution_clock::now();
                         std::vector<std::pair<Sensor *, double>> *similarity = service.computeSimilarity(sensorId, service.getSensorList(), startDate, endDate);
+                        auto end = std::chrono::high_resolution_clock::now();
+
+                        std::chrono::duration<double, std::milli> float_ms = end - start;
+
                         double similarityMean = 0;
                         for (pair<Sensor *, double> elem : *similarity)
                         {
@@ -272,7 +287,8 @@ int main()
                         }
                         similarityMean /= similarity->size();
                         cout << "Score de similarité moyen pour les capteurs proches : " << similarityMean << " %" << endl;
-
+                        cout << "Temps d'exécution de la fonction computeSimilarity sur tous les capteurs: " << float_ms.count() << " milliseconds" << endl;
+                        
                         found = true;
                         break;
                     }

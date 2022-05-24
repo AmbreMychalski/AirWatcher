@@ -124,12 +124,12 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
 }
 std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
-    // cout << "la :2 \n";
+    
     std::vector<Measure *> measureListRef = sensor->getMeasureList();
     double meanRefTab[NB_ATTRIBUTES];
     double meanTab[NB_ATTRIBUTES];
     computeMean(measureListRef, meanRefTab);
-    // cout << "la :3 \n";
+    
 
     std::vector<std::pair<Sensor *, double>> distanceList;
     std::vector<std::pair<Sensor *, double>> *similarityList = new std::vector<std::pair<Sensor *, double>>;
@@ -169,7 +169,6 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sen
         for (pair<Sensor *, double> elemDistance : distanceList)
         {
             distanceList[i].second = elemDistance.second / distanceMax;
-            cout << "oui :" << elemDistance.second << "\n";
             i++;
         }
     }
@@ -354,7 +353,6 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
 vector<Measure *> *Service::filterByPeriod(string sensorId, Date startDate, Date endDate)
 {
     Sensor *sensor = database.getSensorById(sensorId);
-    cout << "laaaa " << sensor->getId() << endl;
     if (sensor == nullptr)
     {
         return nullptr;
