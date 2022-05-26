@@ -39,8 +39,8 @@ const double O_3[] = {240, 210, 180, 150, 130, 105, 80, 55, 30, 0};
 
 // Driver function to sort the vector elements
 // by second element of pairs
-bool sortBySec(const pair<Sensor, double> &a,
-               const pair<Sensor, double> &b)
+bool sortBySec(const pair<Sensor*, double> &a,
+               const pair<Sensor*, double> &b)
 {
     return (a.second > b.second);
 }
@@ -122,24 +122,24 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(string sens
     }
     return Service::computeSimilarity(database.getSensorList()[i], sensorList, startDate, endDate);
 }
-std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
+std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sensorRef, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
     
-    std::vector<Measure *> measureListRef = sensor->getMeasureList();
+    std::vector<Measure *> *measureListRef = filterByPeriod(sensorRef->getId(), startDate, endDate);
     double meanRefTab[NB_ATTRIBUTES];
     double meanTab[NB_ATTRIBUTES];
-    computeMean(measureListRef, meanRefTab);
+    computeMean(*measureListRef, meanRefTab);
     
 
     std::vector<std::pair<Sensor *, double>> distanceList;
     std::vector<std::pair<Sensor *, double>> *similarityList = new std::vector<std::pair<Sensor *, double>>;
     double distanceMax = 0;
-    for (Sensor *sensor : sensorList)
+    for (Sensor* sensor : sensorList)
     {
-        double distance = 0;
         // Si le capteur est bien distinct du capteur de référence
-        if (sensor->getId() != sensor->getId())
+        if (sensorRef->getId() != sensor->getId())
         {
+            double distance = 0;
             std::vector<Measure *> *measureList = filterByPeriod(sensor->getId(), startDate, endDate);
             if (!measureList->empty())
             {
@@ -151,36 +151,33 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sen
                     /// Incrémenter la distance totale par la distance (au carré)
                     // entre les valeurs moyenne smesurées par ce capteur et le capteur de
                     // référence, à condition que ces valeurs existent bien
-
-                    distance = distance + abs(meanRefTab[i] - meanTab[i]);
+                    if (meanRefTab[i] >= 0.0 && meanTab[i] >= 0.0){
+                        distance = distance + abs(meanRefTab[i] - meanTab[i]);
+                    }
                 }
                 // delete measureList;
-                cout << endl;
             }
+            distanceList.push_back(make_pair(sensor, distance));
+            distanceMax = max(distance, distanceMax);
         }
-        distanceList.push_back(make_pair(sensor, distance));
-        distanceMax = max(distance, distanceMax);
     }
     // Si tous les capteurs ne sont pas exactement identiques
-    if (distanceMax != 0)
+    if (distanceMax > 0.0)
     {
         // Normaliser les distances entre 0 et 1
-        int i = 0;
-        for (pair<Sensor *, double> elemDistance : distanceList)
+        for (pair<Sensor *, double>& elemDistance : distanceList)
         {
-            distanceList[i].second = elemDistance.second / distanceMax;
-            i++;
+            elemDistance.second = elemDistance.second / distanceMax;
         }
     }
-    for (pair<Sensor *, double> elemNormalizedDistance : distanceList)
+    for (pair<Sensor *, double>& elemNormalizedDistance : distanceList)
     {
         double similarity = 1 - elemNormalizedDistance.second;
         similarityList->push_back(make_pair(elemNormalizedDistance.first, similarity));
     }
-
     // Using sort() function to sort by 2nd element
     // of pair
-    // sort(similarityList->begin(), similarityList->end(), sortBySec);
+    sort(similarityList->begin(), similarityList->end(), sortBySec);
     return similarityList;
 }
 
@@ -278,11 +275,11 @@ int Service::computeATMOIndex(double o3, double so2, double no2, double pm10)
 
 void Service::computeMean(const vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES])
 {
-    double o3 = 0;
-    double so2 = 0;
-    double no2 = 0;
-    double pm10 = 0;
-    double nbO3, nbSo2, nbNo2, nbPm10 = 0;
+    double o3 = 0.0;
+    double so2 = 0.0;
+    double no2 = 0.0;
+    double pm10 = 0.0;
+    double nbO3 = 0.0, nbSo2 = 0.0, nbNo2 = 0.0, nbPm10 = 0.0;
     for (Measure *measure : measures)
     {
         if (measure->getAttribute().getId() == "O3")
@@ -306,10 +303,10 @@ void Service::computeMean(const vector<Measure *> measures, double (&returnArray
             nbPm10++;
         }
     }
-    returnArray[0] = o3 / nbO3;
-    returnArray[1] = so2 / nbSo2;
-    returnArray[2] = no2 / nbNo2;
-    returnArray[3] = pm10 / nbPm10;
+    returnArray[0] = nbO3 ? o3 / nbO3 : -1.0;
+    returnArray[1] = nbSo2 ? so2 / nbSo2 : -1.0;
+    returnArray[2] = nbNo2 ? no2 / nbNo2 : -1.0;
+    returnArray[3] = nbPm10 ? pm10 / nbPm10 : -1.0;
 }
 
 vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
