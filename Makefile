@@ -22,11 +22,12 @@ OBJS = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
 # Repertoire et Nom pour l'exécutable
 DISTDIR = dist
 EXENAME = airwatcher
+TESTNAME = airwatchertest
 
 # Regroupement du Repertoire et du Nom de l'exécutable
 # dans une seule variable pour plus de commodité
 DIST = $(DISTDIR)/$(EXENAME)
-
+TEST = $(DISTDIR)/$(TESTNAME)
 
 # Creation de l'exécutable en mode Production
 all: SRCS := $(filter-out %mainTest.cpp, $(SRCS))
@@ -36,7 +37,7 @@ all: $(DIST)
 #test: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
 test: SRCS := $(filter-out %main.cpp, $(SRCS))
 test: initobj initdist
-test: $(DIST)
+test: $(TEST)
 
 # Creation de l'exécutable en mode Debug
 release: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
@@ -46,6 +47,10 @@ release: $(DIST)
 # Commande d'édition des liens
 $(DIST): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
+	
+# Commande d'édition des liens
+$(TEST): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 # Commande d'assemblage (réalise également le traitement par le préprocesseur et la compilation)
 $(OBJ)/%.o : $(SRC)/%.cpp
@@ -53,7 +58,7 @@ $(OBJ)/%.o : $(SRC)/%.cpp
 
 # Commande de nettoyage (destruction de l'exécutable et des fichiers assemblés)
 clean:
-	$(RM) -r $(DIST) $(OBJ)/*
+	$(RM) -r $(DISTDIR)/* $(OBJ)/*
 
 # Commande d'initialisation du projet
 init : initobj initsrc

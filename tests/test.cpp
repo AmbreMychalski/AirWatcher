@@ -228,8 +228,8 @@ TEST_CASE( "computeSimilarity", "[service]" ) {
     }
 }
 
-/*
-SCENARIO( "computeATMOIndex2", "[service]" ) {
+
+/*SCENARIO( "computeATMOIndex2", "[service]" ) {
 
     GIVEN( "A vector with some items" ) {
         std::vector<int> v( 5 );
@@ -270,4 +270,4 @@ SCENARIO( "computeATMOIndex2", "[service]" ) {
             }
         }
     }
-}
+}*/
