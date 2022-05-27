@@ -10,7 +10,7 @@ CFLAGS = -g -ansi -pedantic -Wall -std=c++11
 SRC = ../src
 
 # Repertoire des fichiers assemblés
-OBJ = ../build/src
+OBJ = ../build
 
 # Recuperation de tous les fichiers .cpp
 # du dossier des sources grâce à la fonction wildcard
