@@ -362,24 +362,24 @@ TEST_CASE( "computeMeanPointTimePeriod", "[service]" ) {
             REQUIRE(means[3] == 10.0 );
         }
     }
-    SECTION( "four neighbours around - crash test" ) {
-        // this is just a crash test because I don't want to calculate this accurately
-        atmo = service.computeMeanPointTimePeriod(Date(2010,01,01,12,00,00),Date(2010,01,01,12,00,00),make_pair(45.80,4.70),means);
+    SECTION( "four neighbours around" ) {
+        atmo = service.computeMeanPointTimePeriod(Date(2010,01,01,12,00,00),Date(2010,01,01,12,00,00),make_pair(45.77805,4.82793),means);
         THEN( "atmo index" ){
-            REQUIRE( atmo == 4 );
+            REQUIRE( atmo == 6 );
         }
         THEN( "measure o3" ){
-            REQUIRE(means[0] == 100.0 );
+            REQUIRE(round(means[0]) == round(138.9) );
         }
         THEN( "measure so2" ){
-            REQUIRE(means[1] == 100.0 );
+            REQUIRE(round(means[1]) == round(138.9) );
         }
         THEN( "measure no2" ){
-            REQUIRE(means[2] == 100.0 );
+            REQUIRE(round(means[2]) == round(138.9) );
         }
         THEN( "measure pm10" ){
-            REQUIRE(means[3] == 10.0 );
+            REQUIRE(round(means[3]) == round(23.81) );
         }
+        // round(value) because it's not accurate enough
     }
 }
 
