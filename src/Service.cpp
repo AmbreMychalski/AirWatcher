@@ -37,14 +37,6 @@ const double O_3[] = {240, 210, 180, 150, 130, 105, 80, 55, 30, 0};
 
 //----------------------------------------------------------------- PUBLIC
 
-// Driver function to sort the vector elements
-// by second element of pairs
-bool sortBySec(const pair<Sensor*, double> &a,
-               const pair<Sensor*, double> &b)
-{
-    return (a.second > b.second);
-}
-
 long double toRadians(const long double degree)
 {
     // cmath library in C++
@@ -85,6 +77,25 @@ long double distance(long double lat1, long double long1,
     ans = ans * R;
 
     return ans;
+}
+
+// Driver function to sort the vector elements
+// by second element of pairs
+bool sortBySec(const pair<Sensor*, double> &a,
+               const pair<Sensor*, double> &b)
+{
+    return (a.second > b.second);
+}
+
+// Driver function to sort the sensors
+// by second element of pairs
+bool sortByDistance(Sensor* a,
+                    Sensor* b,
+                    const pair<double,double> &coords)
+{
+    double lat2 = coords.first;
+    double long2 = coords.second;
+    return (distance(a->getCoords().first, a->getCoords().second, lat2, long2) < distance(b->getCoords().first, b->getCoords().second, lat2, long2));
 }
 
 //----------------------------------------------------- Méthodes publiques
@@ -183,45 +194,86 @@ std::vector<std::pair<Sensor *, double>> *Service::computeSimilarity(Sensor *sen
 
 int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES])
 {
+    int atmoIndex;
+    for (int i = 0; i < NB_ATTRIBUTES; ++i)
+    {
+        returnArray[i] = -1.0;
+        // on initialise le tableau à -1.0 (ie pas de mesure)
+    }
+
     std::vector<Sensor *> *listSensorNeighbours = filterNeighbours(center);
-    double distanceSum = 0;
-
-    // On trouve la distance totale séparant les capteurs voisins du point
-    // passé en paramètre
-    for (Sensor *sensor : *listSensorNeighbours)
+    if (listSensorNeighbours == NULL)
     {
-        double lat1 = center.first;
-        double long1 = center.second;
-        double lat2 = sensor->getCoords().first;
-        double long2 = sensor->getCoords().second;
-        long double dist = distance(lat1, long1, lat2, long2);
-        distanceSum += dist;
+        // coords en dehors de la zone étudiée
+        atmoIndex = -2;
     }
-
-    // Pour chaque type de mesure de chaque capteur, on fait leur moyenne sur
-    // la période de temps, puis on pondère cette moyenne
-    // par leur distance au point passé en paramètre
-    const int LENGTH = listSensorNeighbours->size();
-    for (Sensor *sensor : *listSensorNeighbours)
+    else
     {
-        std::vector<Measure *> *measuresList = filterByPeriod(sensor->getId(), startDate, endDate);
-        double measuresMean[NB_ATTRIBUTES];
-        computeMean(*measuresList, measuresMean);
-        double lat1 = center.first;
-        double long1 = center.second;
-        double lat2 = sensor->getCoords().first;
-        double long2 = sensor->getCoords().second;
-        long double dist = distance(lat1, long1, lat2, long2);
-        double ponderation = (1 - dist / distanceSum) / (LENGTH - 1);
-
-        for (int i = 0; i < NB_ATTRIBUTES; ++i)
+        // Pour chaque type de mesure de chaque capteur, on fait leur moyenne sur
+        // la période de temps, puis on pondère cette moyenne
+        // par leur distance au point passé en paramètre
+        const int LENGTH = listSensorNeighbours->size();
+        if (LENGTH==1)
         {
-            returnArray[i] = returnArray[i] + measuresMean[i] * ponderation;
+            // on distingue ce cas pour ne pas faire la pondération
+            Sensor *sensor = listSensorNeighbours->at(0);
+            std::vector<Measure *> *measuresList = filterByPeriod(sensor->getId(), startDate, endDate);
+            double measuresMean[NB_ATTRIBUTES];
+            computeMean(*measuresList, measuresMean);
+            for (int i = 0; i < NB_ATTRIBUTES; ++i)
+            {
+                returnArray[i] = measuresMean[i];
+            }
         }
+        else
+        {
+            double distanceSum = 0;
+            // On trouve la distance totale séparant les capteurs voisins du point
+            // passé en paramètre
+            vector<long double> dist(LENGTH);
+            int j = 0;
+            for (Sensor *sensor : *listSensorNeighbours)
+            {
+                double lat1 = center.first;
+                double long1 = center.second;
+                double lat2 = sensor->getCoords().first;
+                double long2 = sensor->getCoords().second;
+                dist[j] = distance(lat1, long1, lat2, long2);
+                distanceSum += dist[j];
+                ++j;
+            }
+            j = 0;
+            for (Sensor *sensor : *listSensorNeighbours)
+            {
+                std::vector<Measure *> *measuresList = filterByPeriod(sensor->getId(), startDate, endDate);
+                double measuresMean[NB_ATTRIBUTES];
+                computeMean(*measuresList, measuresMean);
+                double ponderation = (1 - dist[j] / distanceSum) / (LENGTH - 1);
 
-        // delete measuresList;
+                for (int i = 0; i < NB_ATTRIBUTES; ++i)
+                {
+                    if (measuresMean[i]>= 0)
+                    {
+                        if (returnArray[i] == -1.0)
+                        {
+                            returnArray[i] = measuresMean[i] * ponderation;
+                            // on reinitialise le tableau de retour avec la première mesure
+                        }
+                        else
+                        {
+                            returnArray[i] += measuresMean[i] * ponderation;
+                            // on ajoute la mesure
+                        }
+                    }
+                    // si la valeur de la mesure est à -1.0, on ne la compte pas
+                }
+                ++j;
+                // delete measuresList;
+            }
+        }
+        atmoIndex = computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
     }
-    return computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
+    return atmoIndex;
 }
 
 int Service::getUserPoints(string userId)
@@ -320,11 +372,12 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
     int i = 0;
 
     vector<Sensor *> sensorList = database.getSensorList();
+    sort(sensorList.begin(), sensorList.end(), [coords](Sensor* i, Sensor* j){ return sortByDistance(i,j,coords); });
     const int LENGTH = sensorList.size();
-    Sensor *sensorAtMinDistance = nullptr;
-    double minDistance = 0;
     double lat1 = coords.first;
     double long1 = coords.second;
+    /*Sensor *sensorAtMinDistance = nullptr;
+    double minDistance = 0;
 
     while (i < LENGTH && sensors->size() < MAX_NEAREST_SENSORS_NUMBER)
     {
@@ -343,6 +396,22 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
             sensorAtMinDistance = sensor;
         }
         ++i;
+    }*/
+    while (i < LENGTH && sensors->size() < MAX_NEAREST_SENSORS_NUMBER)
+    {
+        Sensor *sensor = sensorList[i];
+        double lat2 = sensor->getCoords().first;
+        double long2 = sensor->getCoords().second;
+        long double dist = distance(lat1, long1, lat2, long2);
+        if (dist < MAX_NEAREST_SENSORS_RADIUS)
+        {
+            sensors->push_back(sensor);
+        }
+        ++i;
+    }
+    if (sensors->size() == 0 && sensorList.size() > 0)
+    {
+        sensors->push_back(sensorList[0]);
     }
     return sensors;
 }

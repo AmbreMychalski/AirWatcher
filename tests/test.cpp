@@ -249,15 +249,137 @@ TEST_CASE( "computeATMOIndex", "[service]" ) {
         REQUIRE(service.computeATMOIndex(-1.0,42.0,-1.0,8.0) == 2 );
     }
     SECTION( "only invalid measures") {
-        REQUIRE(service.computeATMOIndex(-1.0,-1.0,-1.0,0-1.0) == -1 );
+        REQUIRE(service.computeATMOIndex(-1.0,-1.0,-1.0,-1.0) == -1 );
     }
 }
 
 // vector<Sensor *> *filterNeighbours(pair<double, double> coords);
 TEST_CASE( "filterNeighbours", "[service]" ) {
-    //vector<Sensor *> * neighbours;
+    vector<Sensor *> * neighbours;
     SECTION( "out of range" ) {
         REQUIRE(service.filterNeighbours(make_pair(0.0,0.0)) == NULL );
+    }
+    SECTION( "same coords, 4 neighbours" ) {
+        neighbours = service.filterNeighbours(make_pair(44.0,5.0));
+        REQUIRE(neighbours->size() == 4 );
+        THEN( "first sensor" ){
+            REQUIRE(neighbours->at(0)->getId() == "Sensor5" );
+        }
+        THEN( "second sensor" ){
+            REQUIRE(neighbours->at(1)->getId() == "Sensor6" );
+        }
+        THEN( "third sensor" ){
+            REQUIRE(neighbours->at(2)->getId() == "Sensor7" );
+        }
+        THEN( "fourth sensor" ){
+            REQUIRE(neighbours->at(3)->getId() == "Sensor8" );
+        }
+    }
+    SECTION( "far from any sensor, west" ) {
+        neighbours = service.filterNeighbours(make_pair(43.5,-2.0));
+        REQUIRE(neighbours->size() == 1 );
+        THEN( "first sensor" ){
+            REQUIRE(neighbours->at(0)->getId() == "Sensor5" );
+        }
+    }
+    SECTION( "some neighbours" ) {
+        neighbours = service.filterNeighbours(make_pair(46.5,5.0));
+        REQUIRE(neighbours->size() == 3 );
+        THEN( "first sensor" ){
+            REQUIRE(neighbours->at(0)->getId() == "Sensor2" );
+        }
+        THEN( "second sensor" ){
+            REQUIRE(neighbours->at(1)->getId() == "Sensor1" );
+        }
+        THEN( "third sensor" ){
+            REQUIRE(neighbours->at(2)->getId() == "Sensor3" );
+        }
+    }
+    SECTION( "distinct coords, 4 neighbours" ) {
+        neighbours = service.filterNeighbours(make_pair(45.70,4.99));
+        REQUIRE(neighbours->size() == 4 );
+        THEN( "first sensor" ){
+            REQUIRE(neighbours->at(0)->getId() == "Sensor3" );
+        }
+        THEN( "second sensor" ){
+            REQUIRE(neighbours->at(1)->getId() == "Sensor2" );
+        }
+        THEN( "third sensor" ){
+            REQUIRE(neighbours->at(2)->getId() == "Sensor1" );
+        }
+        THEN( "fourth sensor" ){
+            REQUIRE(neighbours->at(3)->getId() == "Sensor4" );
+        }
+    }
+}
+
+// int computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES]);
+TEST_CASE( "computeMeanPointTimePeriod", "[service]" ) {
+    int atmo;
+    double means[4];
+    SECTION( "out of range" ) {
+        REQUIRE(service.computeMeanPointTimePeriod(Date(),Date(),make_pair(0.0,0.0),means) == -2 );
+        THEN( "measure o3" ){
+            REQUIRE(means[0] == -1.0 );
+        }
+        THEN( "measure so2" ){
+            REQUIRE(means[1] == -1.0 );
+        }
+        THEN( "measure no2" ){
+            REQUIRE(means[2] == -1.0 );
+        }
+        THEN( "measure pm10" ){
+            REQUIRE(means[3] == -1.0 );
+        }
+    }
+    SECTION( "no measure found during the period" ) {
+        REQUIRE(service.computeMeanPointTimePeriod(Date(),Date(),make_pair(44.0,5.0),means) == -1 );
+        THEN( "measure o3" ){
+            REQUIRE(means[0] == -1.0 );
+        }
+        THEN( "measure so2" ){
+            REQUIRE(means[1] == -1.0 );
+        }
+        THEN( "measure no2" ){
+            REQUIRE(means[2] == -1.0 );
+        }
+        THEN( "measure pm10" ){
+            REQUIRE(means[3] == -1.0 );
+        }
+    }
+    SECTION( "only one neighbour found" ) {
+        REQUIRE(service.computeMeanPointTimePeriod(Date(2010,01,01,12,00,00),Date(2010,01,01,12,00,00),make_pair(48.0,6.0),means) == 4 );
+        THEN( "measure o3" ){
+            REQUIRE(means[0] == 100.0 );
+        }
+        THEN( "measure so2" ){
+            REQUIRE(means[1] == 100.0 );
+        }
+        THEN( "measure no2" ){
+            REQUIRE(means[2] == 100.0 );
+        }
+        THEN( "measure pm10" ){
+            REQUIRE(means[3] == 10.0 );
+        }
+    }
+    SECTION( "four neighbours around - crash test" ) {
+        // this is just a crash test because I don't want to calculate this accurately
+        atmo = service.computeMeanPointTimePeriod(Date(2010,01,01,12,00,00),Date(2010,01,01,12,00,00),make_pair(45.80,4.70),means);
+        THEN( "atmo index" ){
+            REQUIRE( atmo == 4 );
+        }
+        THEN( "measure o3" ){
+            REQUIRE(means[0] == 100.0 );
+        }
+        THEN( "measure so2" ){
+            REQUIRE(means[1] == 100.0 );
+        }
+        THEN( "measure no2" ){
+            REQUIRE(means[2] == 100.0 );
+        }
+        THEN( "measure pm10" ){
+            REQUIRE(means[3] == 10.0 );
+        }
     }
 }
 

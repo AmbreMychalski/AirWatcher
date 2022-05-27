@@ -60,6 +60,8 @@ public:
     // Contrat :
     // Retourne la moyenne de la qualité de l’air à un endroit donné sur une période donnée
     // (pondération sur les mesures puis renvoie de l’indice ATMO)
+    // -1 si aucune donnée disponible
+    // -2 si hors de la zone étudiée (ici hors de la France)
 
     int getUserPoints(string userId);
     // type Méthode ( liste des paramètres );
@@ -134,6 +136,13 @@ public:
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
+    //  - NULL si la zone est hors de la zone étudiée (la France ici)
+    //  - pointeur vers un vecteur contenant les capteurs les plus proches
+    //    du point donné, triés par distance, dans un rayon de 100(km)
+    //    maximum et avec 4 capteurs au maximum
+    //  - pointeur vers un vecteur contenant le capteur le plus proche
+    //    si ils sont tous trop loin (distance > 100)
+    //  - pointeur vers un vecteur vide si il n'y a aucun capteur
 
     vector<Measure *> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
     // type Méthode ( liste des paramètres );
