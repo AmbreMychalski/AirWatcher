@@ -323,13 +323,13 @@ vector<Sensor *> *Service::filterNeighbours(pair<double, double> coords)
     const int LENGTH = sensorList.size();
     Sensor *sensorAtMinDistance = nullptr;
     double minDistance = 0;
+    double lat1 = coords.first;
+    double long1 = coords.second;
 
     while (i < LENGTH && sensors->size() < MAX_NEAREST_SENSORS_NUMBER)
     {
 
         Sensor *sensor = sensorList[i];
-        double lat1 = coords.first;
-        double long1 = coords.second;
         double lat2 = sensor->getCoords().first;
         double long2 = sensor->getCoords().second;
         long double dist = distance(lat1, long1, lat2, long2);

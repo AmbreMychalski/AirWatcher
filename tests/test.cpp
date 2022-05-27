@@ -27,7 +27,7 @@ TEST_CASE( "getSensorById", "[service]" ) {
     }
 }
 
-//vector<Measure *> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
+// vector<Measure *> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
 TEST_CASE( "filterByPeriod", "[service]" ) {
     SECTION( "wrong id" ) {
         REQUIRE( service.filterByPeriod("Sensor1_", Date(), Date()) == NULL );
@@ -43,7 +43,7 @@ TEST_CASE( "filterByPeriod", "[service]" ) {
     }
 }
 
-//void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
+// void computeMean(vector<Measure *> measures, double (&returnArray)[NB_ATTRIBUTES]);
 TEST_CASE( "computeMean", "[service]" ) {
     double means[4];
     vector<Measure*>* measures;
@@ -228,6 +228,38 @@ TEST_CASE( "computeSimilarity", "[service]" ) {
     }
 }
 
+// int computeATMOIndex(double o3, double so2, double no2, double pm10);
+TEST_CASE( "computeATMOIndex", "[service]" ) {
+    SECTION( "O3 measure gives the index" ) {
+        REQUIRE(service.computeATMOIndex(240.0,0.0,0.0,0.0) == 10 );
+    }
+    SECTION( "SO2 measure gives the index" ) {
+        REQUIRE(service.computeATMOIndex(0.0,500.0,0.0,0.0) == 10 );
+    }
+    SECTION( "NO2 measure gives the index" ) {
+        REQUIRE(service.computeATMOIndex(0.0,0.0,400.0,0.0) == 10 );
+    }
+    SECTION( "PM10 measure gives the index" ) {
+        REQUIRE(service.computeATMOIndex(0.0,0.0,0.0,80.0) == 10 );
+    }
+    SECTION( "very low measures") {
+        REQUIRE(service.computeATMOIndex(0.0,0.0,0.0,0.0) == 1 );
+    }
+    SECTION( "some invalid measures") {
+        REQUIRE(service.computeATMOIndex(-1.0,42.0,-1.0,8.0) == 2 );
+    }
+    SECTION( "only invalid measures") {
+        REQUIRE(service.computeATMOIndex(-1.0,-1.0,-1.0,0-1.0) == -1 );
+    }
+}
+
+// vector<Sensor *> *filterNeighbours(pair<double, double> coords);
+TEST_CASE( "filterNeighbours", "[service]" ) {
+    //vector<Sensor *> * neighbours;
+    SECTION( "out of range" ) {
+        REQUIRE(service.filterNeighbours(make_pair(0.0,0.0)) == NULL );
+    }
+}
 
 /*SCENARIO( "computeATMOIndex2", "[service]" ) {
 

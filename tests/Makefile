@@ -50,13 +50,7 @@ clean:
 
 
 initobj :
-	if [ ! -d "$(OBJ)" ]; then\
-		echo "Creating objects directory";\
-		mkdir $(OBJ);\
-	fi
+	mkdir -p -v $(OBJ)
 
 initdist :
-	if [ ! -d "$(DISTDIR)" ]; then\
-		echo "Creating dist directory";\
-		mkdir $(DISTDIR);\
-	fi
+	mkdir -p -v $(DISTDIR)

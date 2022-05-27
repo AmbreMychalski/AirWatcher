@@ -60,23 +60,9 @@ $(OBJ)/%.o : $(SRC)/%.cpp
 clean:
 	$(RM) -r $(DISTDIR)/* $(OBJ)/*
 
-# Commande d'initialisation du projet
-init : initobj initsrc
 
 initobj :
-	if [ ! -d "$(OBJ)" ]; then\
-		echo "Creating objects directory";\
-		mkdir $(OBJ);\
-	fi
+	mkdir -p -v $(OBJ)
 
 initdist :
-	if [ ! -d "$(DISTDIR)" ]; then\
-		echo "Creating dist directory";\
-		mkdir $(DISTDIR);\
-	fi
-
-initsrc :
-	if [ ! -d "$(SRC)" ]; then\
-		echo "Creating source directory";\
-		mkdir $(SRC);\
-	fi
+	mkdir -p -v $(DISTDIR)
