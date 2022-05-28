@@ -119,6 +119,13 @@ istream &operator>>(istream &stream, Date &d)
     return stream;
 }
 
+Date::Date(const Date& date) : year(date.getYear()), month(date.getMonth()), day(date.getDay()), hour(date.getHour()), minute(date.getMinute()), second(date.getSecond())
+{
+#ifdef MAP
+    cout << "Appel au constructeur par copie de <Date>" << endl;
+#endif
+}
+
 Date::Date(int y, int M, int d, int h, int m, int s) : year(y), month(M), day(d), hour(h), minute(m), second(s)
 {
 #ifdef MAP

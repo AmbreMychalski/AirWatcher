@@ -44,8 +44,8 @@ class Service
 public:
     //----------------------------------------------------- Méthodes publiques
 
-    std::vector<std::pair<Sensor *, double>> *computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
-    std::vector<std::pair<Sensor *, double>> *computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
+    std::vector<std::pair<Sensor *, double>> computeSimilarity(Sensor *sensor, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
+    std::vector<std::pair<Sensor *, double>> computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -130,7 +130,7 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    vector<Sensor *> *filterNeighbours(pair<double, double> coords);
+    vector<Sensor *> filterNeighbours(pair<double, double> coords);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -144,7 +144,7 @@ public:
     //    si ils sont tous trop loin (distance > 100)
     //  - pointeur vers un vecteur vide si il n'y a aucun capteur
 
-    vector<Measure *> *filterByPeriod(std::string sensorId, Date startdate, Date endDate);
+    vector<Measure *> filterByPeriod(std::string sensorId, Date startdate, Date endDate);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
@@ -156,7 +156,7 @@ protected:
     //------------------------------------------------------------------ PRIVE
 
 private:
-    Database database;
+    Database* database;
     //----------------------------------------------------- Méthodes privées
 
     //----------------------------------------------------- Attributs privés

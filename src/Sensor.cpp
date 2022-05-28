@@ -89,6 +89,10 @@ Sensor::~Sensor()
 #ifdef MAP
   cout << "Appel au destructeur de <Sensor>" << endl;
 #endif
+  for (Measure* measure : measureList)
+  {
+    delete measure;
+  }
 }
 
 bool Sensor::operator<(const Sensor &s) const

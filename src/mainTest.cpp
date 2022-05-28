@@ -41,22 +41,22 @@ int main()
 
     Date d1(2019, 1, 1, 0, 0, 0);
     Date d2(2019, 2, 7, 0, 0, 0);
-    vector<Measure *> *listM = s.filterByPeriod("Sensor1", d1, d2);
+    vector<Measure *> listM = s.filterByPeriod("Sensor1", d1, d2);
      cout << "Mesures du sensor 1 : \n";
-    for (Measure *m : *listM)
+    for (Measure *m : listM)
     {
         cout << m->getAttribute().getId() << " :" << m->getValue() << "\n";
     }
 
     pair<double, double> coords = make_pair(44.4, 3.2);
-    vector<Sensor *> *listS = s.filterNeighbours(coords);
-    for (Sensor *s : *listS)
+    vector<Sensor *> listS = s.filterNeighbours(coords);
+    for (Sensor *s : listS)
     {
         cout << s->getId() << "\n";
     }
 
     double res[4]{0};
-    s.computeMean(*listM, res);
+    s.computeMean(listM, res);
     for (int i = 0; i < 4; i++)
     {
         cout << res[i] << "\n";
@@ -65,8 +65,8 @@ int main()
     cout << s.computeATMOIndex(res[0], res[1], res[2], res[3]) << "\n";
 
 
-    vector<std::pair<Sensor *, double>> * listSim= s.computeSimilarity("Sensor0",sensorsList, d1, d2);
-    for (pair<Sensor *, double> p : *listSim){
+    vector<std::pair<Sensor *, double>> listSim= s.computeSimilarity("Sensor0",sensorsList, d1, d2);
+    for (pair<Sensor *, double> p : listSim){
         cout<<p.first->getId()<<" "<<p.second<<"\n";
     }
 }

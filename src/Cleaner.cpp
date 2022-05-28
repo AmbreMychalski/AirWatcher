@@ -33,22 +33,23 @@ pair<double, double> Cleaner::getCoords() const
     return coords;
 }
 
-Date Cleaner::getStartDate() const
+Date& Cleaner::getStartDate() const
 {
-    return startDate;
+    return *(startDate);
 }
 
-Date Cleaner::getEndDate() const
+Date& Cleaner::getEndDate() const
 {
-    return endDate;
+    return *(endDate);
 }
 
-void Cleaner::setEndDate(Date date)
+void Cleaner::setEndDate(Date* date)
 {
+    delete endDate;
     endDate = date;
 }
 
-Cleaner::Cleaner(string id, pair<double, double> coords, Date startDate, Date endDate) : id(id), coords(coords), startDate(startDate), endDate(endDate)
+Cleaner::Cleaner(string id, pair<double, double> coords, Date* startDate, Date* endDate) : id(id), coords(coords), startDate(startDate), endDate(endDate)
 {
 #ifdef MAP
     cout << "Appel au constructeur de <Cleaner>" << endl;
@@ -60,6 +61,8 @@ Cleaner::~Cleaner()
 #ifdef MAP
     cout << "Appel au destructeur de <Cleaner>" << endl;
 #endif
+    delete startDate;
+    delete endDate;
 }
 //------------------------------------------------- Surcharge d'opérateurs
 
@@ -74,9 +77,9 @@ ostream &operator<<(ostream &stream, const Cleaner &c)
     stream << " | Longitude: ";
     stream << setiosflags(ios::fixed) << setw(6) << left << setprecision(1) << c.coords.second;
     stream << " | Date de mise en place: ";
-    stream << c.startDate;
+    stream << *(c.startDate);
     stream << " | Date de fin: ";
-    stream << c.endDate;
+    stream << *(c.endDate);
 
     return stream;
 }

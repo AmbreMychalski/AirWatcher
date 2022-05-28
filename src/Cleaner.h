@@ -36,14 +36,14 @@ public:
 
     pair<double, double> getCoords() const;
 
-    Date getStartDate() const;
+    Date& getStartDate() const;
 
-    Date getEndDate() const;
+    Date& getEndDate() const;
 
-    void setEndDate(Date date);
+    void setEndDate(Date* date);
 
     //-------------------------------------------- Constructeurs - destructeur
-    Cleaner(string id, pair<double, double> coords, Date startDate, Date endDate);
+    Cleaner(string id, pair<double, double> coords, Date* startDate, Date* endDate);
 
     virtual ~Cleaner();
 
@@ -55,8 +55,8 @@ protected:
     //----------------------------------------------------- Attributs protégés
     string id;
     pair<double, double> coords;
-    Date startDate;
-    Date endDate;
+    Date* startDate;
+    Date* endDate;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Cleaner>

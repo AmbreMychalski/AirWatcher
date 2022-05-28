@@ -72,6 +72,8 @@ public:
 
     //-------------------------------------------- Constructeurs - destructeur
 
+    Date(const Date& date);
+
     Date(int y, int M, int d, int h, int m, int s);
 
     Date();

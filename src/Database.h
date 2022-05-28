@@ -13,8 +13,10 @@
 //--------------------------------------------------- Interfaces utilisées
 #include <iostream>
 #include "User.h"
+#include "Sensor.h"
 #include "Cleaner.h"
 #include "Provider.h"
+#include "Attribute.h"
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
@@ -36,9 +38,9 @@ public:
     //
     // Contrat :
     //
-    void initialiseDB(string fAttribute, string fMesure, string fsensor, string fcleaner, string fprovider, string fuser);
-    vector<Attribute> initialiseAttribute(string fAttribute);
-    void initialiseMesure(string fMesure, vector<Attribute> attributeList);
+    void initialiseDB(string fattribute, string fmeasure, string fsensor, string fcleaner, string fprovider, string fuser);
+    void initialiseAttribute(string fattribute);
+    void initialiseMeasure(string fmeasure);
     void initialiseSensor(string fsensor);
     void initialiseCleaner(string fcleaner);
     void initialiseProvider(string fprovider);
@@ -60,11 +62,7 @@ public:
     // Contrat :
     //
 
-    virtual ~Database(){
-#ifdef MAP
-    cout << "Appel au destructeur de <Database>" << endl;
-#endif
-    };
+    virtual ~Database();
     // Mode d'emploi :
     //
     // Contrat :
@@ -80,6 +78,7 @@ protected:
     vector<Sensor*> sensorList;
     vector<Cleaner*> cleanerList;
     vector<Provider*> providerList;
+    vector<Attribute*> attributeList;
 };
 
 //-------------------------------- Autres définitions dépendantes de <Database>

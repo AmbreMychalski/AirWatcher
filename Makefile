@@ -35,6 +35,7 @@ all: initobj initdist
 all: $(DIST)
 
 #test: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
+test: clean
 test: SRCS := $(filter-out %main.cpp, $(SRCS))
 test: initobj initdist
 test: $(TEST)

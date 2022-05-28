@@ -64,23 +64,23 @@ public:
     //-------------------------------------------- Constructeurs - destructeur
     Provider(string id) : id(id)
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au constructeur de <Provider>" << endl;
-#endif
+    #endif
     }
 
     Provider()
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au constructeur de <Provider>" << endl;
-#endif
+    #endif
     }
 
     virtual ~Provider()
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au destructeur de <Provider>" << endl;
-#endif
+    #endif
     }
 
     //------------------------------------------------------------------ PRIVE

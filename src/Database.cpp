@@ -86,18 +86,18 @@ Provider *Database::getProviderById(string providerId)
   return nullptr;
 }
 
-void Database::initialiseDB(string fAttribute, string fMesure, string fsensor, string fcleaner, string fprovider, string fuser)
+void Database::initialiseDB(string fattribute, string fmeasure, string fsensor, string fcleaner, string fprovider, string fuser)
 {
-  vector<Attribute> vectAtt = initialiseAttribute(fAttribute);
+  initialiseAttribute(fattribute);
 
   initialiseSensor(fsensor);
-  initialiseMesure(fMesure, vectAtt);
+  initialiseMeasure(fmeasure);
   initialiseCleaner(fcleaner);
   initialiseProvider(fprovider);
   initialiseUser(fuser);
 }
 
-vector<Attribute> Database::initialiseAttribute(string fileName)
+void Database::initialiseAttribute(string fileName)
 {
   ifstream stream;
   string temp;
@@ -105,7 +105,6 @@ vector<Attribute> Database::initialiseAttribute(string fileName)
   string unit;
   string description;
   Attribute *attribute;
-  vector<Attribute> listAttribute;
   stream.open(fileName.c_str());
 
   getline(stream, temp, '\n');
@@ -115,61 +114,64 @@ vector<Attribute> Database::initialiseAttribute(string fileName)
     getline(stream, unit, ';');
     getline(stream, description, ';');
     attribute = new Attribute(id, unit, description);
-    listAttribute.push_back(*attribute);
+    attributeList.push_back(attribute);
 
     getline(stream, temp, '\n');
     getline(stream, id, ';');
   }
   stream.close();
-  return listAttribute;
 }
 
-void Database::initialiseMesure(string fileName, vector<Attribute> attributeList)
+void Database::initialiseMeasure(string fileName)
 {
   ifstream stream;
   string temp;
   string value, attId, sensorId;
   string year, month, day, hour, minute, seconde;
-  Attribute att;
-  Date date;
-  Sensor *lastSensor = sensorList.at(0);
-  stream.open(fileName.c_str());
-
-  getline(stream, year, '-');
-  while (year.size() != 0)
+  Attribute* att;
+  Date* date;
+  if (!sensorList.empty())
   {
+    Sensor *lastSensor = sensorList.at(0);
 
-    getline(stream, month, '-');
-    getline(stream, day, ' ');
-    getline(stream, hour, ':');
-    getline(stream, minute, ':');
-    getline(stream, seconde, ';');
-    date = Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
+    stream.open(fileName.c_str());
 
-    getline(stream, sensorId, ';');
-    getline(stream, attId, ';');
-    for (Attribute a : attributeList)
-    {
-      if (a.getId() == attId)
-      {
-        att = a;
-      }
-    }
-    getline(stream, value, ';');
-    if (lastSensor->getId() != sensorId)
-    {
-      long unsigned int index = 0;
-      while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
-      {
-        index++;
-      }
-      lastSensor = sensorList.at(index);
-    }
-    lastSensor->addMeasure(new Measure(stod(value), date, att, sensorId));
-    getline(stream, temp, '\n');
     getline(stream, year, '-');
+    while (year.size() != 0)
+    {
+
+      getline(stream, month, '-');
+      getline(stream, day, ' ');
+      getline(stream, hour, ':');
+      getline(stream, minute, ':');
+      getline(stream, seconde, ';');
+      date = new Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
+
+      getline(stream, sensorId, ';');
+      getline(stream, attId, ';');
+      for (Attribute* a : attributeList)
+      {
+        if (a->getId() == attId)
+        {
+          att = a;
+        }
+      }
+      getline(stream, value, ';');
+      if (lastSensor->getId() != sensorId)
+      {
+        long unsigned int index = 0;
+        while (index < sensorList.size() && sensorList.at(index)->getId() != sensorId)
+        {
+          index++;
+        }
+        lastSensor = sensorList.at(index);
+      }
+      lastSensor->addMeasure(new Measure(stod(value), date, att, sensorId));
+      getline(stream, temp, '\n');
+      getline(stream, year, '-');
+    }
+    stream.close();
   }
-  stream.close();
 }
 
 void Database::initialiseSensor(string fileName)
@@ -201,7 +203,7 @@ void Database::initialiseCleaner(string fileName)
   string lon;
   string lat;
   string year, month, day, hour, minute, seconde;
-  Date start, end;
+  Date *start, *end;
   pair<double, double> coords;
 
   stream.open(fileName.c_str());
@@ -223,11 +225,11 @@ void Database::initialiseCleaner(string fileName)
       getline(stream, seconde, ';');
       if (i == 0)
       {
-        start = Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
+        start = new Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
       }
       else
       {
-        end = Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
+        end = new Date(stoi(year), stoi(month), stoi(day), stoi(hour), stoi(minute), stoi(seconde));
       }
     }
     cleanerList.push_back(new Cleaner(id, coords, start, end));
@@ -270,19 +272,46 @@ void Database::initialiseUser(string fileName)
   string temp;
   string id;
   string sensorId;
+  User* lastUser = NULL;
   stream.open(fileName.c_str());
 
   getline(stream, id, ';');
   while (id.size() != 0)
   {
+    // si userList vide -> ajoute le User et il devient le lastUser
+    // si non vide et lastUser différent du User de la ligne lue -> on parcourt userList jusqu'à le trouver
+    //        si pas trouvé -> ajoute le User et il devient le lastUser
+    //        si trouvé -> il devient le lastUser
+    if (lastUser==NULL)
+    {
+      lastUser = new User(id);
+      userList.push_back(lastUser);
+    }
+    else if (lastUser->getId() != id)
+    {
+      long unsigned int index = 0;
+      while (index < userList.size() && userList.at(index)->getId() != id)
+      {
+        ++index;
+      }
+      if (index == userList.size())
+      {
+        lastUser = new User(id);
+        userList.push_back(lastUser);
+      }
+      else
+      {
+        lastUser = userList.at(index);
+      }
+    }
+
     getline(stream, sensorId, ';');
 
-    userList.push_back(new User(id));
     for (Sensor *s : sensorList)
     {
       if (s->getId() == sensorId)
       {
-        userList.back()->addSensor(s);
+        lastUser->addSensor(s);
       }
     }
     getline(stream, temp, '\n');
@@ -290,6 +319,8 @@ void Database::initialiseUser(string fileName)
   }
   stream.close();
 }
+
+//-------------------------------------------- Constructeurs - destructeur
 
 Database::Database()
 {
@@ -299,7 +330,30 @@ Database::Database()
   this->initialiseDB("./datasets/attributes.csv", "./datasets/measurements.csv", "./datasets/sensors.csv", "./datasets/cleaners.csv", "./datasets/providers.csv", "./datasets/users.csv");
 }
 
-//-------------------------------------------- Constructeurs - destructeur
+Database::~Database(){
+#ifdef MAP
+  cout << "Appel au destructeur de <Database>" << endl;
+#endif
+  for (User * user : userList)
+  {
+    delete user;
+  }
+  for (Provider * provider : providerList)
+  {
+    delete provider;
+  }
+  for (Sensor * sensor : sensorList)
+  {
+    delete sensor;
+  }
+  for (Attribute * attribute : attributeList)
+  {
+    delete attribute;
+  }
+  for (Cleaner * cleaner : cleanerList){
+    delete cleaner;
+  }
+}
 
 //------------------------------------------------------------------ PRIVE
 

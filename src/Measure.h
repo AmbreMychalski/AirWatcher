@@ -34,8 +34,9 @@ public:
     // Contrat :
     //
 
-    void setDate(Date date)
+    void setDate(Date* date)
     {
+        delete this->date;
         this->date = date;
     }
     // Mode d'emploi :
@@ -43,7 +44,7 @@ public:
     // Contrat :
     //
 
-    void setAttribute(Attribute &attr)
+    void setAttribute(Attribute* attr)
     {
         this->attribute = attr;
     }
@@ -66,18 +67,18 @@ public:
         return this->sensorId;
     }
 
-    Date getDate() const
+    Date& getDate() const
     {
-        return this->date;
+        return *(this->date);
     }
     // Mode d'emploi :
     //
     // Contrat :
     //
 
-    Attribute getAttribute() const
+    Attribute& getAttribute() const
     {
-        return this->attribute;
+        return *(this->attribute);
     }
     // Mode d'emploi :
     //
@@ -87,30 +88,30 @@ public:
     //-------------------------------------------- Constructeurs - destructeur
     Measure()
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au constructeur de <Measure>" << endl;
-#endif
+    #endif
     }
 
     Measure(const Measure &aMeasure)
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au constructeur par copie de <Measure>" << endl;
-#endif
+    #endif
         this->value = aMeasure.getValue();
-        this->date = aMeasure.getDate();
-        this->attribute = aMeasure.getAttribute();
+        this->date = new Date(aMeasure.getDate());
+        this->attribute = &(aMeasure.getAttribute());
     }
     // Mode d'emploi (constructeur de copie) :
     //
     // Contrat :
     //
 
-    Measure(double value, Date &date, Attribute &attribute, string sensorId)
+    Measure(double value, Date* date, Attribute* attribute, string sensorId)
     {
-#ifdef MAP
+    #ifdef MAP
         cout << "Appel au constructeur de <Measure>" << endl;
-#endif
+    #endif
         this->value = value;
         this->date = date;
         this->attribute = attribute;
@@ -123,9 +124,10 @@ public:
 
     virtual ~Measure()
     {
-#ifdef MAP
-        cout << "Appel au destructeur par copie de <Measure>" << endl;
-#endif
+    #ifdef MAP
+        cout << "Appel au destructeur de <Measure>" << endl;
+    #endif
+        delete date;
     }
     // Mode d'emploi :
     //
@@ -139,8 +141,8 @@ protected:
 
     //----------------------------------------------------- Attributs protégés
     double value;
-    Date date;
-    Attribute attribute;
+    Date* date;
+    Attribute* attribute;
     string sensorId;
 };
 

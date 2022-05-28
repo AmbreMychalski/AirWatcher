@@ -265,13 +265,13 @@ int main()
                         cin >> startDate;
 
                         auto start = std::chrono::high_resolution_clock::now();
-                        std::vector<std::pair<Sensor *, double>> *similarity = service.computeSimilarity(sensorId, service.getSensorList(), startDate, endDate);
+                        std::vector<std::pair<Sensor *, double>> similarity = service.computeSimilarity(sensorId, service.getSensorList(), startDate, endDate);
                         auto end = std::chrono::high_resolution_clock::now();
 
                         std::chrono::duration<double, std::milli> float_ms = end - start;
 
                         cout << "Similarité des capteurs par rapport à " << sensorId << " :" << endl;
-                        for (pair<Sensor *, double> elem : *similarity)
+                        for (pair<Sensor *, double> elem : similarity)
                         {
                             cout << setiosflags(ios::fixed)
                                  << setw(9)

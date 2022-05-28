@@ -93,9 +93,9 @@ public:
 
     User(string id_) : id(id_)
     {
-#ifdef MAP
-    cout << "Appel au constructeur de <User>" << endl;
-#endif
+    #ifdef MAP
+        cout << "Appel au constructeur de <User>" << endl;
+    #endif
         nbPoints = 0;
     }
     // Mode d'emploi :
@@ -104,9 +104,13 @@ public:
     //
 
     virtual ~User(){
-#ifdef MAP
-    cout << "Appel au destructeur de <User>" << endl;
-#endif
+    #ifdef MAP
+        cout << "Appel au destructeur de <User>" << endl;
+    #endif
+        /*for (Sensor* sensor : sensorList)
+        {
+            delete sensor;
+        }*/
     };
     // Mode d'emploi :
     //
