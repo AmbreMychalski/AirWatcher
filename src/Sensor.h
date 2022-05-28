@@ -8,7 +8,7 @@
 
 
 //---------- Interface de la classe <Sensor> (fichier Sensor.h) ----------------
-#if !defined(Sensor_H)
+#ifndef Sensor_H
 #define Sensor_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 #include "Measure.h"
+class User;
 
 using namespace std;
 //------------------------------------------------------------- Constantes
@@ -40,6 +41,8 @@ public:
     void setReliable(bool reliable);
 
     void setCoords(double x, double y);
+    
+    void setUser(User* user);
 
     void addMeasure(Measure *measure);
 
@@ -48,6 +51,8 @@ public:
     bool getReliable() const;
 
     pair<double, double> getCoords() const;
+    
+    User* getUser() const;
 
     vector<Measure *> getMeasureList() const;
 
@@ -81,6 +86,7 @@ protected:
     string id;
     bool reliable;
     pair<double, double> coords;
+    User* user;
     vector<Measure *> measureList;
 };
 

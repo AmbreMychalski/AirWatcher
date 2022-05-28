@@ -53,15 +53,14 @@ public:
     // Renvoie la liste des capteurs de sensorList associés à leur similarité
     // par rapport au capteur de référence, sur une période donnée
 
-    int computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES]);
+    int computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES], bool reliable = false);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la moyenne de la qualité de l’air à un endroit donné sur une période donnée
     // (pondération sur les mesures puis renvoie de l’indice ATMO)
-    // -1 si aucune donnée disponible
-    // -2 si hors de la zone étudiée (ici hors de la France)
+    // -1 si aucune donnée disponible, ou hors de la zone étudiée (ici hors de la France)
 
     int getUserPoints(string userId);
     // type Méthode ( liste des paramètres );
@@ -84,12 +83,21 @@ public:
     // Contrat :
     // Renvoie les cleaners associés à une entreprise
 
+    void incrUserPoints(Sensor* sensor);
+    // type Méthode ( liste des paramètres );
+    // Mode d'emploi :
+    //
+    // Contrat :
+    // Incrémente le nombre de points de l'utilisateur
+    // possédant le capteur
+
     int computeATMOIndex(double o3, double so2, double no2, double pm10);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne l'index ATMO à partir des mesures d'O3, SO2, NO2 et PM10 données
+    //    -> -1 si aucune donnée
 
     bool isProviderIdValid(string id);
     // Mode d'emploi :
@@ -109,7 +117,7 @@ public:
     virtual ~Service();
     // Constructeur
 
-    vector<Sensor *> getSensorList();
+    vector<Sensor *> getSensorList(bool reliable = false);
     vector<Cleaner *> getCleanerList();
     vector<Provider *> getProviderList();
     vector<User *> getUserList();
@@ -130,19 +138,19 @@ public:
     // Retourne dans le tableau passé en paramètre
     // la moyenne des mesures des capteurs par attribut (type de mesure)
 
-    vector<Sensor *> filterNeighbours(pair<double, double> coords);
+    vector<Sensor *> filterNeighbours(pair<double, double> coords, bool reliable = false);
     // type Méthode ( liste des paramètres );
     // Mode d'emploi :
     //
     // Contrat :
     // Retourne la liste des capteurs les plus proches
-    //  - NULL si la zone est hors de la zone étudiée (la France ici)
-    //  - pointeur vers un vecteur contenant les capteurs les plus proches
-    //    du point donné, triés par distance, dans un rayon de 100(km)
+    //  - vecteur contenant les capteurs les plus proches du point donné,
+    //    triés par distance croissante, dans un rayon de 100(km)
     //    maximum et avec 4 capteurs au maximum
-    //  - pointeur vers un vecteur contenant le capteur le plus proche
-    //    si ils sont tous trop loin (distance > 100)
-    //  - pointeur vers un vecteur vide si il n'y a aucun capteur
+    //  - vecteur contenant le capteur le plus proche si ils sont tous
+    //    trop loin (distance > 100)
+    //  - vecteur vide si il n'y a aucun capteur ou si le point est
+    //    en dehors de la zone étudiée (la France ici)
 
     vector<Measure *> filterByPeriod(std::string sensorId, Date startdate, Date endDate);
     // type Méthode ( liste des paramètres );

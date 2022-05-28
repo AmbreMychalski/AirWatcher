@@ -122,15 +122,10 @@ Provider *Service::getProviderById(string id)
 std::vector<std::pair<Sensor *, double>> Service::computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 {
     vector<std::pair<Sensor *, double>> similarityList;
-    int i = 0;
-    const int LENGTH = database->getSensorList().size();
-    while (i < LENGTH && database->getSensorList()[i]->getId() != sensorId)
+    Sensor* sensorRef = getSensorById(sensorId);
+    if (sensorRef != nullptr)
     {
-        ++i;
-    }
-    if (i < LENGTH)
-    {
-        similarityList = computeSimilarity(database->getSensorList()[i], sensorList, startDate, endDate);
+        similarityList = computeSimilarity(sensorRef, sensorList, startDate, endDate);
     }
     return similarityList;
 }
@@ -155,13 +150,15 @@ std::vector<std::pair<Sensor *, double>> Service::computeSimilarity(Sensor *sens
             std::vector<Measure *> measureList = filterByPeriod(sensor->getId(), startDate, endDate);
             if (!measureList.empty())
             {
+                incrUserPoints(sensor);
+
                 computeMean(measureList, meanTab);
 
                 for (int i = 0; i < NB_ATTRIBUTES; ++i)
                 {
 
-                    /// Incrémenter la distance totale par la distance (au carré)
-                    // entre les valeurs moyenne smesurées par ce capteur et le capteur de
+                    /// Incrémenter la distance totale par la distance
+                    // entre les valeurs moyennes mesurées par ce capteur et le capteur de
                     // référence, à condition que ces valeurs existent bien
                     if (meanRefTab[i] >= 0.0 && meanTab[i] >= 0.0){
                         distance = distance + abs(meanRefTab[i] - meanTab[i]);
@@ -193,7 +190,7 @@ std::vector<std::pair<Sensor *, double>> Service::computeSimilarity(Sensor *sens
     return similarityList;
 }
 
-int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES])
+int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<double, double> center, double (&returnArray)[NB_ATTRIBUTES], bool reliable)
 {
     int atmoIndex;
     for (int i = 0; i < NB_ATTRIBUTES; ++i)
@@ -202,7 +199,7 @@ int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<
         // on initialise le tableau à -1.0 (ie pas de mesure)
     }
 
-    std::vector<Sensor *> listSensorNeighbours = filterNeighbours(center);
+    std::vector<Sensor *> listSensorNeighbours = filterNeighbours(center, reliable);
 
     // Pour chaque type de mesure de chaque capteur, on fait leur moyenne sur
     // la période de temps, puis on pondère cette moyenne
@@ -213,11 +210,15 @@ int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<
         // on distingue ce cas pour ne pas faire la pondération
         Sensor *sensor = listSensorNeighbours.at(0);
         std::vector<Measure *> measuresList = filterByPeriod(sensor->getId(), startDate, endDate);
-        double measuresMean[NB_ATTRIBUTES];
-        computeMean(measuresList, measuresMean);
-        for (int i = 0; i < NB_ATTRIBUTES; ++i)
+        if (!measuresList.empty())
         {
-            returnArray[i] = measuresMean[i];
+            incrUserPoints(sensor);
+            double measuresMean[NB_ATTRIBUTES];
+            computeMean(measuresList, measuresMean);
+            for (int i = 0; i < NB_ATTRIBUTES; ++i)
+            {
+                returnArray[i] = measuresMean[i];
+            }
         }
     }
     else
@@ -241,29 +242,32 @@ int Service::computeMeanPointTimePeriod(Date startDate, Date endDate, std::pair<
         for (Sensor *sensor : listSensorNeighbours)
         {
             std::vector<Measure *> measuresList = filterByPeriod(sensor->getId(), startDate, endDate);
-            double measuresMean[NB_ATTRIBUTES];
-            computeMean(measuresList, measuresMean);
-            double ponderation = (1 - dist[j] / distanceSum) / (LENGTH - 1);
-
-            for (int i = 0; i < NB_ATTRIBUTES; ++i)
+            if (!measuresList.empty())
             {
-                if (measuresMean[i]>= 0)
+                incrUserPoints(sensor);
+                double measuresMean[NB_ATTRIBUTES];
+                computeMean(measuresList, measuresMean);
+                double ponderation = (1 - dist[j] / distanceSum) / (LENGTH - 1);
+
+                for (int i = 0; i < NB_ATTRIBUTES; ++i)
                 {
-                    if (returnArray[i] == -1.0)
+                    if (measuresMean[i]>= 0)
                     {
-                        returnArray[i] = measuresMean[i] * ponderation;
-                        // on reinitialise le tableau de retour avec la première mesure
+                        if (returnArray[i] == -1.0)
+                        {
+                            returnArray[i] = measuresMean[i] * ponderation;
+                            // on reinitialise le tableau de retour avec la première mesure
+                        }
+                        else
+                        {
+                            returnArray[i] += measuresMean[i] * ponderation;
+                            // on ajoute la mesure
+                        }
                     }
-                    else
-                    {
-                        returnArray[i] += measuresMean[i] * ponderation;
-                        // on ajoute la mesure
-                    }
+                    // si la valeur de la mesure est à -1.0, on ne la compte pas
                 }
-                // si la valeur de la mesure est à -1.0, on ne la compte pas
             }
             ++j;
-            // delete measuresList;
         }
     }
     atmoIndex = computeATMOIndex(returnArray[0], returnArray[1], returnArray[2], returnArray[3]);
@@ -304,6 +308,15 @@ vector<Cleaner *> *Service::getProviderCleaners(string providerId)
         return provider->getCleanerList();
     }
     return nullptr;
+}
+
+void Service::incrUserPoints(Sensor* sensor)
+{
+    User* user = sensor->getUser();
+    if (user != NULL)
+    {
+        user->incrPoints();
+    }
 }
 
 // https://fr.wikipedia.org/wiki/Indice_de_qualit%C3%A9_de_l%27air
@@ -356,7 +369,7 @@ void Service::computeMean(const vector<Measure *> measures, double (&returnArray
     returnArray[3] = nbPm10 ? pm10 / nbPm10 : -1.0;
 }
 
-vector<Sensor *> Service::filterNeighbours(pair<double, double> coords)
+vector<Sensor *> Service::filterNeighbours(pair<double, double> coords, bool reliable)
 {
 
     std::vector<Sensor *> sensors;
@@ -367,7 +380,7 @@ vector<Sensor *> Service::filterNeighbours(pair<double, double> coords)
     {
         int i = 0;
 
-        vector<Sensor *> sensorList = database->getSensorList();
+        vector<Sensor *> sensorList = getSensorList(reliable);
         sort(sensorList.begin(), sensorList.end(), [coords](Sensor* i, Sensor* j){ return sortByDistance(i,j,coords); });
         const int LENGTH = sensorList.size();
         double lat1 = coords.first;
@@ -423,8 +436,33 @@ bool Service::isUserIdValid(std::string id)
     return database->getUserById(id) != nullptr;
 }
 
-vector<Sensor *> Service::getSensorList()
+vector<Sensor *> Service::getSensorList(bool reliable)
 {
+    if (reliable)
+    {
+        vector<Sensor *> reliableSensors;
+        for (Sensor* sensor : database->getSensorList())
+        {
+            if (sensor->getUser() != NULL)
+            {
+            if (sensor->getUser()->getReliable())
+            {
+                // si le capteur appartient à un utilisateur
+                // et que l'utilisateur et fiable,
+                // alors on ajoute le capteur à la liste
+                reliableSensors.push_back(sensor);
+            }
+            }
+            else if (sensor->getReliable())
+            {
+            // si le capteur n'a pas de propriétaire
+            // mais qu'il est fiable,
+            // alors on l'ajoute à la liste
+            reliableSensors.push_back(sensor);
+            }
+        }
+        return reliableSensors;
+    }
     return database->getSensorList();
 }
 vector<Cleaner *> Service::getCleanerList()

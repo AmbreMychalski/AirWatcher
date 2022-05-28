@@ -7,7 +7,7 @@
 *************************************************************************/
 
 //---------- Interface de la classe <User> (fichier User.h) ----------------
-#if !defined(USER_H)
+#ifndef USER_H
 #define USER_H
 
 //--------------------------------------------------- Interfaces utilisées
@@ -77,14 +77,24 @@ public:
         this->nbPoints = nbPoints_;
     }
 
+    void incrPoints()
+    {
+        ++nbPoints;
+    }
+
     void addSensor(Sensor *sensor)
     {
         this->sensorList.push_back(sensor);
     }
 
-    bool isReliable()
+    bool getReliable()
     {
-        return (*sensorList.begin())->getReliable();
+        return reliable;
+    }
+
+    void setReliable(bool reliable)
+    {
+        this->reliable = reliable;
     }
 
     //------------------------------------------------- Surcharge d'opérateurs
@@ -97,6 +107,7 @@ public:
         cout << "Appel au constructeur de <User>" << endl;
     #endif
         nbPoints = 0;
+        reliable = true;
     }
     // Mode d'emploi :
     //
@@ -126,6 +137,7 @@ protected:
     string id;
     string email;
     string password;
+    bool reliable;
     int nbPoints;
     vector<Sensor *> sensorList;
 };

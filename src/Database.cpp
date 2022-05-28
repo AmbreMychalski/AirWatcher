@@ -312,6 +312,7 @@ void Database::initialiseUser(string fileName)
       if (s->getId() == sensorId)
       {
         lastUser->addSensor(s);
+        s->setUser(lastUser);
       }
     }
     getline(stream, temp, '\n');

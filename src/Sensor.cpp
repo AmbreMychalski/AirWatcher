@@ -36,6 +36,11 @@ void Sensor::setCoords(double x, double y)
   this->coords = make_pair(x, y);
 }
 
+void Sensor::setUser(User* user)
+{
+  this->user = user;
+}
+
 void Sensor::addMeasure(Measure *measure)
 {
   this->measureList.push_back(measure);
@@ -54,6 +59,11 @@ bool Sensor::getReliable() const
 pair<double, double> Sensor::getCoords() const
 {
   return this->coords;
+}
+
+User* Sensor::getUser() const
+{
+  return this->user;
 }
 
 vector<Measure *> Sensor::getMeasureList() const
@@ -80,7 +90,7 @@ Sensor::Sensor(string id, bool reliable, double x, double y)
 #endif
   this->id = id;
   this->reliable = reliable;
-  // pair <double, double> coordonnees=make_pair(x, y);
+  this->user = NULL;
   this->coords = make_pair(x, y);
 }
 
