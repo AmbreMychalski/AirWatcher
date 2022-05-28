@@ -39,6 +39,7 @@ int main()
 
     while (running)
     {     
+        choice =0;
         cout << "-----------------------------------Choix du Menu-----------------------------------------------" << endl;
         while (choice > 4 || choice < 1)
         {
@@ -164,6 +165,8 @@ int main()
         case 2:
         {
             string id = "";
+            cout << "Quel est votre identifiant ?" << endl;
+            cin >> id;
             Provider *provider;
             while ((provider = service.getProviderById(id)) == nullptr)
             {
@@ -171,6 +174,7 @@ int main()
                 cin >> id;
             }
             cout << "Connecté en tant qu'entreprise." << endl;
+            choice = 0;
             while (choice != C_DISCONNECT)
             {
                 cout << endl;
