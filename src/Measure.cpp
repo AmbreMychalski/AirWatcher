@@ -12,7 +12,7 @@ ostream &operator<<(ostream &stream, const Measure &measure)
   stream << " ";
   stream << setiosflags(ios::fixed) << setw(5) << left << measure.attribute->getUnit();
   stream << " | Date: ";
-  stream << measure.date;
+  stream << *measure.date;
 
   return stream;
 }

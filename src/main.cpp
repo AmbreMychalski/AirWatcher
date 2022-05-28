@@ -60,6 +60,7 @@ int main()
         while (choice != P_DISCONNECT)
         {
             cout << endl;
+            cout << "-----------------------------------------------------------------------------------------------" << endl;
             cout << P_AIR_COIN << ") Voir mes points" << endl;
             cout << P_SENSORS << ") Voir mes capteurs" << endl;
             cout << P_SENSOR << ") Sélectionner un capteur" << endl;
@@ -170,6 +171,7 @@ int main()
         while (choice != C_DISCONNECT)
         {
             cout << endl;
+            cout << "-----------------------------------------------------------------------------------------------" << endl;
             cout << C_AIR_CLEANERS << ") Voir la liste d'Air Cleaner(s)" << endl;
             // cout << C_AIR_QUALITY_IMPROVEMENT << ") Voir l'amélioration de la qualité de l'air" << endl;
             cout << C_DISCONNECT << ") Me déconnecter" << endl;
@@ -198,6 +200,7 @@ int main()
         while (choice != G_DISCONNECT)
         {
             cout << endl;
+            cout << "-----------------------------------------------------------------------------------------------" << endl;
             cout << G_MEAN_POINT_TIME_PERIOD << ") Calculer l'indice ATMO Moyen en un point donné sur une période donnée" << endl;
             cout << G_SIMILARITY << ") Calculer le pourcentage de similarité d'un capteur avec ceux qui l'entoure" << endl;
             cout << G_SENSORS << ") Afficher les capteurs" << endl;
