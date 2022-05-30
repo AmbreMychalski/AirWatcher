@@ -7,9 +7,9 @@
 using namespace std;
 
 Service service;
-vector<Sensor *> sensorsList;
 
 TEST_CASE( "getSensorById", "[service]" ) {
+    vector<Sensor *> sensorsList;
     SECTION( "with correct id" ) {
         sensorsList.push_back(service.getSensorById("Sensor1"));
         REQUIRE( sensorsList.back()->getId() == "Sensor1" );
@@ -22,7 +22,6 @@ TEST_CASE( "getSensorById", "[service]" ) {
     }
     SECTION( "with wrong id" ) {
         Sensor * sensor = service.getSensorById("Sensor1_");
-
         REQUIRE( sensor == NULL );
     }
 }
@@ -102,10 +101,17 @@ TEST_CASE( "computeMean", "[service]" ) {
 // vector<pair<Sensor *, double>> computeSimilarity(string sensorId, std::vector<Sensor *> sensorList, Date startDate, Date endDate)
 TEST_CASE( "computeSimilarity", "[service]" ) {
     vector<pair<Sensor *, double>> similarity;
-    // SECTION( "empty list of sensors" ) {
-    //     vector<Sensor *> sensors;
-    //     similarity = service.computeSimilarity("Sensor1",sensors,Date(),Date());
-    // }
+    SECTION( "empty list of sensors" ) {
+        vector<Sensor *> sensors;
+        similarity = service.computeSimilarity("Sensor1",sensors,Date(),Date());
+        REQUIRE( similarity.size() == 0 );
+    }
+    SECTION( "list with the reference sensor only" ) {
+        vector<Sensor *> sensors;
+        sensors.push_back(service.getSensorById("Sensor1"));
+        similarity = service.computeSimilarity("Sensor1",sensors,Date(),Date());
+        REQUIRE( similarity.size() == 0 );
+    }
     SECTION( "list with only one sensor that can be compared with reference sensor" ) {
         vector<Sensor *> sensors;
         sensors.push_back(service.getSensorById("Sensor2"));
