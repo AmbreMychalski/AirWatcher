@@ -32,9 +32,9 @@ all: initobj initdist
 all: $(DIST)
 
 # Creation de l'exécutable en mode Debug
-release: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
-release: clean
-release: all
+debug: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
+debug: clean
+debug: all
 
 # Commande d'édition des liens
 $(DIST): $(OBJS)
