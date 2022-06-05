@@ -16,7 +16,6 @@ OBJ = ../build
 # du dossier des sources grâce à la fonction wildcard
 SRCS := $(wildcard $(SRC)/*.cpp)
 SRCS := $(filter-out $(SRC)/main.cpp, $(SRCS))
-SRCS := $(filter-out $(SRC)/mainTest.cpp, $(SRCS))
 
 # Creation des .o à partir des .cpp en utilisant un pattern de substitution
 OBJS = $(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
@@ -29,7 +28,6 @@ EXENAME := $(patsubst %.cpp, %, $(wildcard *.cpp))
 # dans une seule variable pour plus de commodité
 DIST := $(DISTDIR)/test
 
-#all: CFLAGS = -g -ansi -pedantic -Wall -std=c++11 -D MAP
 all: initobj initdist
 all: $(DIST)
 
