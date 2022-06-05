@@ -233,7 +233,7 @@ int main()
                     cin >> startDate;
 
                     cout << "Veuillez saisir la date de fin (dd/MM/YYYY hh:mm:ss) :" << endl;
-                    cin >> startDate;
+                    cin >> endDate;
 
                     cout << "Veuillez saisir la latitude du point d'analyse :" << endl;
                     cin >> coords.first;
@@ -273,7 +273,7 @@ int main()
                             cin >> startDate;
 
                             cout << "Veuillez saisir la date de fin (dd/MM/YYYY hh:mm:ss) :" << endl;
-                            cin >> startDate;
+                            cin >> endDate;
 
                             auto start = std::chrono::high_resolution_clock::now();
                             std::vector<std::pair<Sensor *, double>> similarity = service.computeSimilarity(sensorId, service.getSensorList(), startDate, endDate);
